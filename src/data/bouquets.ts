@@ -4,6 +4,9 @@ import elegance from "@/assets/bouquet-elegance.jpg";
 import bouteille from "@/assets/bouquet-bouteille.jpg";
 import amesoeur from "@/assets/bouquet-amesoeur.jpg";
 import eternel from "@/assets/bouquet-eternel.jpg";
+import tournesol from "@/assets/bouquet-tournesol.jpg";
+import luxe from "@/assets/bouquet-luxe.jpg";
+import billets from "@/assets/bouquet-billets.jpg";
 
 export type Bouquet = {
   id: string;
@@ -18,50 +21,74 @@ export const bouquets: Bouquet[] = [
   {
     id: "romance-rouge",
     name: "Romance Rouge",
-    description: "Bouquet de roses intenses, idéal pour déclarations et occasions romantiques.",
+    description: "Bouquet de roses rouges intenses avec gypsophile, idéal pour déclarations et demandes en mariage.",
     price: 12000,
     image: romance,
-    alt: "Bouquet Romance Rouge - roses rouges et roses",
+    alt: "Bouquet Romance Rouge - roses rouges et gypsophile avec écrin",
   },
   {
     id: "douceur-samayoo",
     name: "Douceur Samayoo",
-    description: "Arrangement tendre et lumineux, parfait pour anniversaires et félicitations.",
+    description: "Bouquet d'anniversaire emballage lavande avec ballon Happy Birthday, parfait pour célébrer un être cher.",
     price: 19000,
     image: douceur,
-    alt: "Bouquet Douceur Samayoo - roses pastel",
+    alt: "Bouquet Douceur - emballage violet avec ballon Happy Birthday",
   },
   {
     id: "elegance",
     name: "Élégance",
-    description: "Composition de bouquets argentés, pour anniversaires et cadeaux premium.",
+    description: "Box ronde « Just for you » garnie de roses rouges et chocolats Ferrero — un cadeau premium inoubliable.",
     price: 33000,
     image: elegance,
-    alt: "Bouquet Élégance - composition argentée",
+    alt: "Box Élégance - roses rouges et Ferrero Rocher",
   },
   {
     id: "ma-bouteille",
     name: "Ma Bouteille",
-    description: "Bouteilles de vins emballées avec élégance pour offrir à un être cher.",
+    description: "Coffret bouteille de vin accompagnée de roses rouges et d'un médaillon doré, pour offrir avec amour.",
     price: 7000,
     image: bouteille,
-    alt: "Bouteille de vin emballée avec fleurs",
+    alt: "Coffret Ma Bouteille - vin, roses rouges et chocolats",
   },
   {
     id: "ame-soeur",
     name: "Âme Sœur",
-    description: "Bracelet de couple pour transmettre joie et soutien.",
+    description: "Bracelets de couple yin & yang en perles, symbole d'union et de complicité.",
     price: 17000,
     image: amesoeur,
-    alt: "Bracelets de couple Âme Sœur",
+    alt: "Bracelets de couple Âme Sœur - perles yin yang",
   },
   {
     id: "amour-eternel",
     name: "Amour Éternel",
-    description: "Bouquet romantique et sophistiqué pour un message fort et sincère.",
+    description: "Box transparente en forme de cœur, roses rouges et tiroir de Ferrero Rocher — l'expression ultime de l'amour.",
     price: 19000,
     image: eternel,
-    alt: "Bouquet Amour Éternel - roses rouges et roses",
+    alt: "Box Amour Éternel - cœur de roses rouges et Ferrero",
+  },
+  {
+    id: "soleil-tropical",
+    name: "Soleil Tropical",
+    description: "Bouquet vibrant tournesol, roses et alstroemerias dans un emballage rouge « Love » — éclat garanti.",
+    price: 15000,
+    image: tournesol,
+    alt: "Bouquet Soleil Tropical - tournesol et roses colorées",
+  },
+  {
+    id: "edition-luxe",
+    name: "Édition Luxe",
+    description: "Bouquet enveloppé d'un wrapping luxe monogramme noir et nœud signature, pour les grandes occasions.",
+    price: 25000,
+    image: luxe,
+    alt: "Bouquet Édition Luxe - emballage monogramme noir",
+  },
+  {
+    id: "money-bouquet",
+    name: "Money Bouquet",
+    description: "Composition originale alliant roses rouges et billets pliés en pétales — un cadeau aussi chic que surprenant.",
+    price: 28000,
+    image: billets,
+    alt: "Money Bouquet - roses rouges et billets pliés",
   },
 ];
 

@@ -73,14 +73,7 @@ function ArtisanatPage() {
                   </span>
                   <Button
                     size="sm"
-                    onClick={() =>
-                      addItem({
-                        id: item.id,
-                        name: item.name,
-                        price: item.price,
-                        image: item.image,
-                      })
-                    }
+                    onClick={() => addItem(item)}
                   >
                     <ShoppingBag className="h-4 w-4" />
                     Ajouter

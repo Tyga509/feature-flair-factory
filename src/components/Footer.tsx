@@ -18,7 +18,7 @@ export function Footer() {
           <h4 className="font-display text-base mb-3 text-foreground">Contact</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-accent" /> +509 55 01 77 32</li>
-            <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-accent" /> samara10@gmail.com</li>
+            <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-accent" />samara10@gmail.com</li>
             <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-accent" /> Port-au-Prince, Haïti</li>
             <li className="flex items-center gap-2"><Facebook className="h-4 w-4 text-accent" /> Samayoo Flowers</li>
           </ul>

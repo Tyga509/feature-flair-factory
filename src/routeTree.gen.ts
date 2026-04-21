@@ -13,6 +13,7 @@ import { Route as PanierRouteImport } from './routes/panier'
 import { Route as GalerieRouteImport } from './routes/galerie'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BoutiqueRouteImport } from './routes/boutique'
+import { Route as ArtisanatRouteImport } from './routes/artisanat'
 import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -36,6 +37,11 @@ const BoutiqueRoute = BoutiqueRouteImport.update({
   path: '/boutique',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArtisanatRoute = ArtisanatRouteImport.update({
+  id: '/artisanat',
+  path: '/artisanat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AProposRoute = AProposRouteImport.update({
   id: '/a-propos',
   path: '/a-propos',
@@ -50,6 +56,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
+  '/artisanat': typeof ArtisanatRoute
   '/boutique': typeof BoutiqueRoute
   '/contact': typeof ContactRoute
   '/galerie': typeof GalerieRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
+  '/artisanat': typeof ArtisanatRoute
   '/boutique': typeof BoutiqueRoute
   '/contact': typeof ContactRoute
   '/galerie': typeof GalerieRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
+  '/artisanat': typeof ArtisanatRoute
   '/boutique': typeof BoutiqueRoute
   '/contact': typeof ContactRoute
   '/galerie': typeof GalerieRoute
@@ -77,16 +86,25 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/a-propos'
+    | '/artisanat'
     | '/boutique'
     | '/contact'
     | '/galerie'
     | '/panier'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/a-propos' | '/boutique' | '/contact' | '/galerie' | '/panier'
+  to:
+    | '/'
+    | '/a-propos'
+    | '/artisanat'
+    | '/boutique'
+    | '/contact'
+    | '/galerie'
+    | '/panier'
   id:
     | '__root__'
     | '/'
     | '/a-propos'
+    | '/artisanat'
     | '/boutique'
     | '/contact'
     | '/galerie'
@@ -96,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AProposRoute: typeof AProposRoute
+  ArtisanatRoute: typeof ArtisanatRoute
   BoutiqueRoute: typeof BoutiqueRoute
   ContactRoute: typeof ContactRoute
   GalerieRoute: typeof GalerieRoute
@@ -132,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BoutiqueRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/artisanat': {
+      id: '/artisanat'
+      path: '/artisanat'
+      fullPath: '/artisanat'
+      preLoaderRoute: typeof ArtisanatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/a-propos': {
       id: '/a-propos'
       path: '/a-propos'
@@ -152,6 +178,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AProposRoute: AProposRoute,
+  ArtisanatRoute: ArtisanatRoute,
   BoutiqueRoute: BoutiqueRoute,
   ContactRoute: ContactRoute,
   GalerieRoute: GalerieRoute,

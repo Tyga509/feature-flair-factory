@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import about from "@/assets/bouquet-eternel.jpg";
+import about from "@/assets/about-samayoo.jpg";
 
 export const Route = createFileRoute("/a-propos")({
   head: () => ({

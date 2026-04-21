@@ -1,34 +1,39 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { bouquets } from "@/data/bouquets";
+import ambiance1 from "@/assets/hero-1.jpg";
+import ambiance2 from "@/assets/hero-2.jpg";
+import ambiance3 from "@/assets/hero-3.jpg";
 
 export const Route = createFileRoute("/galerie")({
   head: () => ({
     meta: [
       { title: "Galerie — SAMAYOO FLOWERS" },
-      { name: "description", content: "Portfolio des créations florales Samayoo Flowers." },
+      { name: "description", content: "Ambiances et inspirations Samayoo Flowers." },
       { property: "og:title", content: "Galerie — SAMAYOO FLOWERS" },
-      { property: "og:description", content: "Découvrez nos plus belles créations en images." },
+      { property: "og:description", content: "Inspirations et ambiances signées Samayoo Flowers." },
     ],
   }),
   component: GaleriePage,
 });
 
 function GaleriePage() {
-  // duplicate to make a richer mosaic
-  const images = [...bouquets, ...bouquets].map((b, i) => ({ ...b, key: `${b.id}-${i}` }));
+  const images = [
+    { key: "a1", image: ambiance1, alt: "Ambiance florale Samayoo 1" },
+    { key: "a2", image: ambiance2, alt: "Ambiance florale Samayoo 2" },
+    { key: "a3", image: ambiance3, alt: "Ambiance florale Samayoo 3" },
+  ];
 
   return (
     <div className="px-4 py-16">
       <div className="mx-auto max-w-6xl">
         <header className="text-center mb-14 animate-fade-in">
-          <p className="text-accent font-medium tracking-[0.3em] text-xs uppercase">Portfolio</p>
-          <h1 className="font-display text-5xl md:text-6xl mt-2 text-primary">Nos Créations</h1>
+          <p className="text-accent font-medium tracking-[0.3em] text-xs uppercase">Inspirations</p>
+          <h1 className="font-display text-5xl md:text-6xl mt-2 text-primary">Nos Ambiances</h1>
           <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-            Une sélection de nos plus belles compositions florales.
+            Les créations signées Samayoo en situation. Pour découvrir le catalogue, rendez-vous sur la Boutique.
           </p>
         </header>
 
-        <div className="columns-2 md:columns-3 gap-4 space-y-4">
+        <div className="columns-1 md:columns-2 gap-4 space-y-4">
           {images.map((img, i) => (
             <div
               key={img.key}

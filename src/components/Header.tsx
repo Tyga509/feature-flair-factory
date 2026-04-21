@@ -7,6 +7,7 @@ import logo from "@/assets/logo.png";
 const navLinks = [
   { to: "/", label: "Accueil" },
   { to: "/boutique", label: "Boutique" },
+  { to: "/artisanat", label: "Artisanat" },
   { to: "/galerie", label: "Galerie" },
   { to: "/a-propos", label: "À propos" },
   { to: "/contact", label: "Contact" },

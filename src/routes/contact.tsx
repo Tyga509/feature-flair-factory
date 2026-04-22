@@ -46,7 +46,7 @@ function ContactPage() {
           <div className="bg-gradient-romantic rounded-3xl p-8 shadow-soft">
             <h2 className="font-display text-2xl text-foreground mb-6">Nos coordonnées</h2>
             <ul className="space-y-4 text-foreground/85">
-              <li className="flex items-start gap-3"><Phone className="h-5 w-5 text-primary mt-0.5" /> <a href="https://wa.me/50955017732" target="_blank" rel="noopener noreferrer" className="story-link">+509 55 01 77 32</a></li>
+              <li className="flex items-start gap-3"><Phone className="h-5 w-5 text-primary mt-0.5" /> <a href="https://wa.me/50955017732?text=Salut%20Samayoo%20Flowers%2C%20Je%20voudrais%20avoir%20plus%20d%27informations%20sur%20vos%20produits%20svp..." target="_blank" rel="noopener noreferrer" className="story-link">+509 55 01 77 32</a></li>
               <li className="flex items-start gap-3"><Mail className="h-5 w-5 text-primary mt-0.5" /> <a href="mailto:samaraben10icloud.com" className="story-link">samaraben10icloud.com</a></li>
               <li className="flex items-start gap-3"><MapPin className="h-5 w-5 text-primary mt-0.5" /> Port-au-Prince, Haïti</li>
               <li className="flex items-start gap-3"><Facebook className="h-5 w-5 text-primary mt-0.5" /> <a href="https://www.facebook.com/profile.php?id=61571305557097" target="_blank" rel="noopener noreferrer" className="story-link">Samayoo Flowers</a></li>
@@ -54,7 +54,7 @@ function ContactPage() {
             </ul>
             <div className="mt-8 p-4 bg-card/70 rounded-xl border border-border">
               <p className="font-display text-lg text-primary">Horaires</p>
-              <p className="text-sm text-muted-foreground mt-1">Lun – Sam : 9h – 18h</p>
+              <p className="text-sm text-muted-foreground mt-1">Lun – Sam : 9h AM – 4h PM</p>
               <p className="text-sm text-muted-foreground">Dimanche : sur rendez-vous</p>
             </div>
           </div>

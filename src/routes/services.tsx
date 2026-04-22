@@ -110,7 +110,7 @@ function ServicesPage() {
         </header>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((s, i) => {
+          {services.map((s) => {
             const Icon = s.icon;
             return (
               <article
@@ -120,9 +120,6 @@ function ServicesPage() {
                 <div className="flex items-center gap-3 mb-3">
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-secondary/70 ring-1 ring-accent/40 text-primary">
                     <Icon className="h-5 w-5" />
-                  </span>
-                  <span className="text-xs font-medium tracking-[0.25em] text-accent uppercase">
-                    {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
                 <h2 className="font-display text-xl text-primary mb-2">

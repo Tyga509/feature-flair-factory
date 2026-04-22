@@ -27,7 +27,7 @@ function BoutiquePage() {
         </header>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {bouquets.map((b) => (
+          {[...bouquets].sort((a, b) => a.price - b.price).map((b) => (
             <BouquetCard key={b.id} bouquet={b} />
           ))}
         </div>

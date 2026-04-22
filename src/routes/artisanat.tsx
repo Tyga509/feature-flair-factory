@@ -45,7 +45,7 @@ function ArtisanatPage() {
         </header>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {artisanats.map((item) => (
+          {[...artisanats].sort((a, b) => a.price - b.price).map((item) => (
             <article
               key={item.id}
               className="group rounded-2xl overflow-hidden bg-card shadow-soft hover-lift flex flex-col"
@@ -57,7 +57,7 @@ function ArtisanatPage() {
                   loading="lazy"
                   width={800}
                   height={800}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
               <div className="p-5 flex flex-col gap-3 flex-1">

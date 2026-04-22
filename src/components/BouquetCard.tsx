@@ -21,7 +21,7 @@ export function BouquetCard({ bouquet }: { bouquet: Bouquet }) {
           loading="lazy"
           width={1024}
           height={1024}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="h-full w-full object-contain transition-transform duration-700 group-hover:scale-105"
         />
       </div>
       <div className="p-5 flex flex-col gap-3 flex-1">

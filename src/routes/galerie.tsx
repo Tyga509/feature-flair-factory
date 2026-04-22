@@ -131,7 +131,7 @@ const collections = {
     ],
   },
   money: {
-    label: "Money Bouquets",
+    label: "Bouquets Argent",
     desc: "Créations uniques en billets — gourdes haïtiennes et dollars américains.",
     images: [
       mon1, mon2, mon3, mon4, mon5, mon6, mon7, mon8, mon9, mon10,

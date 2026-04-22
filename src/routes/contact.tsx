@@ -46,11 +46,11 @@ function ContactPage() {
           <div className="bg-gradient-romantic rounded-3xl p-8 shadow-soft">
             <h2 className="font-display text-2xl text-foreground mb-6">Nos coordonnées</h2>
             <ul className="space-y-4 text-foreground/85">
-              <li className="flex items-start gap-3"><Phone className="h-5 w-5 text-primary mt-0.5" /> <a href="tel:+50955017732" className="story-link">+509 55 01 77 32</a></li>
-              <li className="flex items-start gap-3"><Mail className="h-5 w-5 text-primary mt-0.5" /> <a href="mailto:samara10@gmail.com" className="story-link">samara10@gmail.com</a></li>
+              <li className="flex items-start gap-3"><Phone className="h-5 w-5 text-primary mt-0.5" /> <a href="https://wa.me/50955017732" target="_blank" rel="noopener noreferrer" className="story-link">+509 55 01 77 32</a></li>
+              <li className="flex items-start gap-3"><Mail className="h-5 w-5 text-primary mt-0.5" /> <a href="mailto:samaraben10icloud.com" className="story-link">samaraben10icloud.com</a></li>
               <li className="flex items-start gap-3"><MapPin className="h-5 w-5 text-primary mt-0.5" /> Port-au-Prince, Haïti</li>
-              <li className="flex items-start gap-3"><Facebook className="h-5 w-5 text-primary mt-0.5" /> Samayoo Flowers</li>
-              <li className="flex items-start gap-3"><Music2 className="h-5 w-5 text-primary mt-0.5" /> TikTok : @Samayoo01</li>
+              <li className="flex items-start gap-3"><Facebook className="h-5 w-5 text-primary mt-0.5" /> <a href="https://www.facebook.com/profile.php?id=61571305557097" target="_blank" rel="noopener noreferrer" className="story-link">Samayoo Flowers</a></li>
+              <li className="flex items-start gap-3"><Music2 className="h-5 w-5 text-primary mt-0.5" /> <a href="https://www.tiktok.com/@samayoo01?_r=1&_t=ZS-95kygrqkeeH" target="_blank" rel="noopener noreferrer" className="story-link">TikTok : @Samayoo01</a></li>
             </ul>
             <div className="mt-8 p-4 bg-card/70 rounded-xl border border-border">
               <p className="font-display text-lg text-primary">Horaires</p>

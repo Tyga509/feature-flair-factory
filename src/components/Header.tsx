@@ -20,16 +20,16 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-background/85 border-b border-border">
-      <div className="mx-auto max-w-6xl px-4 flex items-center justify-between h-20">
+      <div className="mx-auto max-w-6xl px-4 flex items-center justify-between h-24">
         <Link to="/" className="flex items-center gap-3 group" onClick={() => setOpen(false)}>
           <img
             src={logo}
             alt="Logo Samayoo Flowers"
-            width={48}
-            height={48}
-            className="h-12 w-12 object-contain transition-transform group-hover:scale-110"
+            width={80}
+            height={80}
+            className="h-16 w-16 sm:h-20 sm:w-20 object-contain transition-transform group-hover:scale-110"
           />
-          <span className="font-display text-lg tracking-[0.18em] text-primary font-semibold hidden sm:inline">
+          <span className="font-display text-xl tracking-[0.18em] text-primary font-semibold hidden sm:inline">
             SAMAYOO FLOWERS
           </span>
         </Link>

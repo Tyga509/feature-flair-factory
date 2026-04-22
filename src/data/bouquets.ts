@@ -84,11 +84,11 @@ export const bouquets: Bouquet[] = [
   },
   {
     id: "money-bouquet",
-    name: "Money Bouquet",
-    description: "Composition originale alliant roses rouges et billets pliés en pétales — un cadeau aussi chic que surprenant.",
+    name: "Bouquets Argent",
+    description: "Composition originale en billets pliés en pétales façon dahlia, ornée d'un papillon doré — un cadeau aussi chic que surprenant.",
     price: 28000,
     image: billets,
-    alt: "Money Bouquet - roses rouges et billets pliés",
+    alt: "Bouquets Argent - billets pliés en pétales avec papillon doré",
   },
 ];
 

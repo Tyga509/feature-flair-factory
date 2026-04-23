@@ -11,8 +11,13 @@ const langs = [
 export function LanguageSwitcher() {
   const { i18n, t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const current = langs.find((l) => l.code === i18n.language) ?? langs[0];
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {

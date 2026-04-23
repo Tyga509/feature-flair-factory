@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { artisanats } from "@/data/artisanat";
 import { formatPrice } from "@/data/bouquets";
 import { useCart } from "@/context/CartContext";
@@ -26,21 +27,20 @@ export const Route = createFileRoute("/artisanat")({
 
 function ArtisanatPage() {
   const { addItem } = useCart();
+  const { t } = useTranslation();
 
   return (
     <div className="px-4 py-16">
       <div className="mx-auto max-w-6xl">
         <header className="text-center mb-14 animate-fade-in">
           <p className="text-accent font-medium tracking-[0.3em] text-xs uppercase">
-            Made in Haïti
+            {t("common.sectionMadeInHaiti")}
           </p>
           <h1 className="font-display text-5xl md:text-6xl mt-2 text-primary">
-            Artisanat Local
+            {t("artisanat.title")}
           </h1>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-            Au-delà des fleurs, Samayoo célèbre la richesse de l'artisanat haïtien.
-            Mugs, pochettes, tableaux et porte-clés — chaque pièce est un fragment
-            de notre culture à offrir ou à s'offrir.
+            {t("artisanat.subtitle")}
           </p>
         </header>
 
@@ -76,7 +76,7 @@ function ArtisanatPage() {
                     onClick={() => addItem(item)}
                   >
                     <ShoppingBag className="h-4 w-4" />
-                    Ajouter
+                    {t("common.add")}
                   </Button>
                 </div>
               </div>

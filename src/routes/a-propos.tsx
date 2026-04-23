@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import about from "@/assets/about-samayoo.jpg";
 
@@ -15,44 +16,39 @@ export const Route = createFileRoute("/a-propos")({
 });
 
 function AboutPage() {
+  const { t } = useTranslation();
   return (
     <div className="px-4 py-16">
       <div className="mx-auto max-w-6xl grid gap-12 lg:grid-cols-2 items-center">
         <div className="animate-fade-in">
-          <p className="text-accent font-medium tracking-[0.3em] text-xs uppercase">À propos</p>
-          <h1 className="font-display text-5xl md:text-6xl mt-2 text-primary">SAMAYOO FLOWERS</h1>
+          <p className="text-accent font-medium tracking-[0.3em] text-xs uppercase">{t("common.sectionAbout")}</p>
+          <h1 className="font-display text-5xl md:text-6xl mt-2 text-primary">{t("about.title")}</h1>
 
           <div className="space-y-5 mt-6 text-foreground/85 leading-relaxed">
-            <p>
-              Chez Samayoo Flowers, nous croyons que chaque fleur raconte une histoire et que chaque bouquet est une émotion que l'on offre. Née d'une passion pour l'élégance végétale et le design floral, notre boutique transforme vos moments précieux en souvenirs inoubliables.
-            </p>
+            <p>{t("about.p1")}</p>
 
             <div>
-              <h3 className="font-display text-2xl text-foreground mb-2">Notre vision</h3>
-              <p>
-                Nous ne nous contentons pas de composer des bouquets ; nous créons des ambiances. Que ce soit pour célébrer un amour, marquer un événement ou apporter une touche de fraîcheur à votre quotidien, chaque tige est sélectionnée avec une attention méticuleuse.
-              </p>
+              <h3 className="font-display text-2xl text-foreground mb-2">{t("about.visionTitle")}</h3>
+              <p>{t("about.visionText")}</p>
             </div>
 
             <div>
-              <h3 className="font-display text-2xl text-foreground mb-2">Pourquoi nous choisir ?</h3>
+              <h3 className="font-display text-2xl text-foreground mb-2">{t("about.whyTitle")}</h3>
               <ul className="space-y-3">
-                <li><strong className="text-primary">Créations uniques —</strong> chaque arrangement reflète votre personnalité.</li>
-                <li><strong className="text-primary">Engagement qualité —</strong> fleurs fraîches et rigoureusement sélectionnées.</li>
-                <li><strong className="text-primary">Service attentionné —</strong> de la conception à la livraison.</li>
+                <li><strong className="text-primary">{t("about.why1Strong")} </strong>{t("about.why1")}</li>
+                <li><strong className="text-primary">{t("about.why2Strong")} </strong>{t("about.why2")}</li>
+                <li><strong className="text-primary">{t("about.why3Strong")} </strong>{t("about.why3")}</li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-display text-2xl text-foreground mb-2">Notre engagement</h3>
-              <p>
-                Samayoo Flowers, c'est avant tout une aventure humaine. Nous sommes fiers de participer à vos célébrations et de mettre notre savoir-faire au service de votre bonheur.
-              </p>
+              <h3 className="font-display text-2xl text-foreground mb-2">{t("about.commitTitle")}</h3>
+              <p>{t("about.commitText")}</p>
             </div>
           </div>
 
           <Button asChild size="lg" className="rounded-full px-8 mt-8">
-            <Link to="/boutique">Découvrir nos créations</Link>
+            <Link to="/boutique">{t("common.discoverCreations")}</Link>
           </Button>
         </div>
 
@@ -68,7 +64,7 @@ function AboutPage() {
             />
           </div>
           <div className="absolute -bottom-6 -left-6 bg-gradient-gold rounded-full px-6 py-3 shadow-soft">
-            <p className="font-display italic text-foreground">L'art d'offrir des émotions</p>
+            <p className="font-display italic text-foreground">{t("about.badge")}</p>
           </div>
         </div>
       </div>

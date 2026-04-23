@@ -1,22 +1,24 @@
 import { Link } from "@tanstack/react-router";
 import { ShoppingBag, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useCart } from "@/context/CartContext";
 import logo from "@/assets/logo.png";
-
-const navLinks = [
-  { to: "/", label: "Accueil" },
-  { to: "/boutique", label: "Boutique" },
-  { to: "/artisanat", label: "Artisanat" },
-  { to: "/services", label: "Services" },
-  { to: "/galerie", label: "Galerie" },
-  { to: "/a-propos", label: "À propos" },
-  { to: "/contact", label: "Contact" },
-] as const;
 
 export function Header() {
   const { totalItems } = useCart();
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+
+  const navLinks = [
+    { to: "/", label: t("nav.home") },
+    { to: "/boutique", label: t("nav.boutique") },
+    { to: "/artisanat", label: t("nav.artisanat") },
+    { to: "/services", label: t("nav.services") },
+    { to: "/galerie", label: t("nav.galerie") },
+    { to: "/a-propos", label: t("nav.about") },
+    { to: "/contact", label: t("nav.contact") },
+  ] as const;
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-background/85 border-b border-border">
@@ -55,7 +57,7 @@ export function Header() {
           <Link
             to="/panier"
             className="relative p-2.5 rounded-full hover:bg-secondary transition-colors group"
-            aria-label="Panier"
+            aria-label={t("nav.cart")}
           >
             <ShoppingBag className="h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
             {totalItems > 0 && (
@@ -68,7 +70,7 @@ export function Header() {
             type="button"
             onClick={() => setOpen((v) => !v)}
             className="md:hidden p-2.5 rounded-full hover:bg-secondary"
-            aria-label="Menu"
+            aria-label={t("nav.menu")}
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>

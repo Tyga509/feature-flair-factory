@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import art1 from "@/assets/gal-art-1.jpg";
 import art2 from "@/assets/gal-art-2.jpg";
@@ -113,8 +114,6 @@ export const Route = createFileRoute("/galerie")({
 
 const collections = {
   artificielles: {
-    label: "Fleurs Artificielles",
-    desc: "Compositions en soie et fleurs éternelles, durables et toujours impeccables.",
     images: [
       art1, art2, art3, art4, art5, art6, art7, art8, art9, art10,
       art11, art12, art13, art14, art15, art16, art17, art18, art19, art20,
@@ -122,8 +121,6 @@ const collections = {
     ],
   },
   naturelles: {
-    label: "Fleurs Naturelles",
-    desc: "Bouquets romantiques de fleurs fraîches, parfums et couleurs authentiques.",
     images: [
       nat1, nat2, nat3, nat4, nat5, nat6, nat7, nat8, nat9, nat10,
       nat11, nat12, nat13, nat14, nat15, nat16, nat17, nat18, nat19, nat20,
@@ -131,8 +128,6 @@ const collections = {
     ],
   },
   money: {
-    label: "Bouquets Argent",
-    desc: "Créations uniques en billets — gourdes haïtiennes et dollars américains.",
     images: [
       mon1, mon2, mon3, mon4, mon5, mon6, mon7, mon8, mon9, mon10,
       mon11, mon12, mon13, mon14, mon15, mon16, mon17, mon18, mon19, mon20,
@@ -145,20 +140,22 @@ type Tab = keyof typeof collections;
 
 function GaleriePage() {
   const [tab, setTab] = useState<Tab>("artificielles");
+  const { t } = useTranslation();
   const current = collections[tab];
+  const label = t(`galerie.tabs.${tab}.label`);
 
   return (
     <div className="px-4 py-16">
       <div className="mx-auto max-w-6xl">
         <header className="text-center mb-10 animate-fade-in">
           <p className="text-accent font-medium tracking-[0.3em] text-xs uppercase">
-            Inspirations
+            {t("common.sectionInspirations")}
           </p>
           <h1 className="font-display text-5xl md:text-6xl mt-2 text-primary">
-            Notre Galerie
+            {t("galerie.title")}
           </h1>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-            Trois univers signés Samayoo Flowers — explorez nos créations.
+            {t("galerie.subtitle")}
           </p>
         </header>
 
@@ -176,13 +173,13 @@ function GaleriePage() {
                     : "bg-secondary/60 text-foreground/80 hover:bg-secondary"
                 }`}
               >
-                {collections[key].label}
+                {t(`galerie.tabs.${key}.label`)}
               </button>
             );
           })}
         </div>
         <p className="text-center text-sm text-muted-foreground mb-10">
-          {current.desc}
+          {t(`galerie.tabs.${tab}.desc`)}
         </p>
 
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
@@ -193,7 +190,7 @@ function GaleriePage() {
             >
               <img
                 src={src}
-                alt={`${current.label} ${i + 1}`}
+                alt={`${label} ${i + 1}`}
                 loading="lazy"
                 width={768}
                 height={1024}

@@ -15,6 +15,7 @@ import { Route as GalerieRouteImport } from './routes/galerie'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BoutiqueRouteImport } from './routes/boutique'
 import { Route as ArtisanatRouteImport } from './routes/artisanat'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -48,6 +49,11 @@ const ArtisanatRoute = ArtisanatRouteImport.update({
   path: '/artisanat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AProposRoute = AProposRouteImport.update({
   id: '/a-propos',
   path: '/a-propos',
@@ -62,6 +68,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
+  '/admin': typeof AdminRoute
   '/artisanat': typeof ArtisanatRoute
   '/boutique': typeof BoutiqueRoute
   '/contact': typeof ContactRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
+  '/admin': typeof AdminRoute
   '/artisanat': typeof ArtisanatRoute
   '/boutique': typeof BoutiqueRoute
   '/contact': typeof ContactRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
+  '/admin': typeof AdminRoute
   '/artisanat': typeof ArtisanatRoute
   '/boutique': typeof BoutiqueRoute
   '/contact': typeof ContactRoute
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/a-propos'
+    | '/admin'
     | '/artisanat'
     | '/boutique'
     | '/contact'
@@ -105,6 +115,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/a-propos'
+    | '/admin'
     | '/artisanat'
     | '/boutique'
     | '/contact'
@@ -115,6 +126,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/a-propos'
+    | '/admin'
     | '/artisanat'
     | '/boutique'
     | '/contact'
@@ -126,6 +138,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AProposRoute: typeof AProposRoute
+  AdminRoute: typeof AdminRoute
   ArtisanatRoute: typeof ArtisanatRoute
   BoutiqueRoute: typeof BoutiqueRoute
   ContactRoute: typeof ContactRoute
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArtisanatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/a-propos': {
       id: '/a-propos'
       path: '/a-propos'
@@ -198,6 +218,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AProposRoute: AProposRoute,
+  AdminRoute: AdminRoute,
   ArtisanatRoute: ArtisanatRoute,
   BoutiqueRoute: BoutiqueRoute,
   ContactRoute: ContactRoute,

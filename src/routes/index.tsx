@@ -45,11 +45,9 @@ function HomePage() {
           {t("home.intro")}
         </p>
         <div className="mt-8 flex flex-wrap gap-3 justify-center">
+          {/* Un seul bouton ici pour un look plus "Prestige" */}
           <Button asChild size="lg" className="rounded-full px-8 shadow-elegant">
             <Link to="/boutique">{t("common.viewBoutique")}</Link>
-          </Button>
-          <Button asChild size="lg" variant="outline" className="rounded-full px-8 bg-white/10 backdrop-blur border-white/40 text-white hover:bg-white hover:text-primary">
-            <Link to="/contact">{t("common.orderNow")}</Link>
           </Button>
         </div>
       </HeroCarousel>

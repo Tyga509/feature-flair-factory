@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import {
   Gift,
   Mail,
@@ -34,78 +35,33 @@ export const Route = createFileRoute("/services")({
 });
 
 const services = [
-  {
-    icon: Gift,
-    title: "Cadeau Surprise",
-    desc: "Un coffret unique pensé pour émouvoir : nous composons une surprise sur mesure selon la personne, l'occasion et votre budget.",
-  },
-  {
-    icon: Mail,
-    title: "Cartes (Invitation / Mariage / Visite)",
-    desc: "Création et impression de cartes élégantes pour vos invitations, mariages, événements et cartes de visite professionnelles.",
-  },
-  {
-    icon: Heart,
-    title: "Chambre Romantique",
-    desc: "Mise en scène florale de votre chambre pour un anniversaire, une demande ou une nuit spéciale : pétales, bougies, ballons et fleurs.",
-  },
-  {
-    icon: Flower2,
-    title: "Confections Fleurs (Artificielle / Éternelle / Naturelle)",
-    desc: "Bouquets et compositions florales sur mesure en fleurs naturelles fraîches, éternelles préservées ou artificielles haut de gamme.",
-  },
-  {
-    icon: PenLine,
-    title: "Dédicace",
-    desc: "Messages personnalisés calligraphiés sur cartes, rubans ou supports décoratifs pour rendre chaque cadeau inoubliable.",
-  },
-  {
-    icon: Sparkles,
-    title: "Décoration",
-    desc: "Décoration événementielle complète : mariages, anniversaires, baby showers, fiançailles. Mise en place et démontage inclus.",
-  },
-  {
-    icon: FileText,
-    title: "Flyers",
-    desc: "Conception graphique et impression de flyers pour vos événements, promotions ou activités professionnelles.",
-  },
-  {
-    icon: Banknote,
-    title: "Gâteau d'Argent",
-    desc: "Pièces uniques en forme de gâteau composées de vrais billets (gourdes ou dollars) — un cadeau original pour mariages et anniversaires.",
-  },
-  {
-    icon: ImageIcon,
-    title: "Tableau PVC",
-    desc: "Tableaux décoratifs personnalisés sur PVC : photos, citations, paysages d'Haïti — finition durable et élégante.",
-  },
-  {
-    icon: Coffee,
-    title: "Tasse Personnalisée",
-    desc: "Mugs en céramique imprimés avec votre photo, votre logo ou un message — un cadeau pratique et chaleureux.",
-  },
-  {
-    icon: Briefcase,
-    title: "Valise Personnalisée",
-    desc: "Personnalisation de valises avec motifs, prénoms ou visuels uniques pour voyager avec style.",
-  },
-];
+  { icon: Gift, key: "surprise" },
+  { icon: Mail, key: "cards" },
+  { icon: Heart, key: "room" },
+  { icon: Flower2, key: "flowers" },
+  { icon: PenLine, key: "dedication" },
+  { icon: Sparkles, key: "decoration" },
+  { icon: FileText, key: "flyers" },
+  { icon: Banknote, key: "moneyCake" },
+  { icon: ImageIcon, key: "pvc" },
+  { icon: Coffee, key: "mug" },
+  { icon: Briefcase, key: "luggage" },
+] as const;
 
 function ServicesPage() {
+  const { t } = useTranslation();
   return (
     <div className="px-4 py-16">
       <div className="mx-auto max-w-6xl">
         <header className="text-center mb-14 animate-fade-in">
           <p className="text-accent font-medium tracking-[0.3em] text-xs uppercase">
-            Ce que nous offrons
+            {t("common.sectionWhatWeOffer")}
           </p>
           <h1 className="font-display text-5xl md:text-6xl mt-2 text-primary">
-            Nos Services
+            {t("services.title")}
           </h1>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-            De la fleur fraîche au money bouquet, en passant par la décoration
-            événementielle — Samayoo Flowers vous accompagne pour chaque moment
-            précieux.
+            {t("services.subtitle")}
           </p>
         </header>
 
@@ -114,7 +70,7 @@ function ServicesPage() {
             const Icon = s.icon;
             return (
               <article
-                key={s.title}
+                key={s.key}
                 className="group rounded-2xl border border-border bg-card p-6 shadow-soft hover-lift transition-all"
               >
                 <div className="flex items-center gap-3 mb-3">
@@ -123,10 +79,10 @@ function ServicesPage() {
                   </span>
                 </div>
                 <h2 className="font-display text-xl text-primary mb-2">
-                  {s.title}
+                  {t(`services.items.${s.key}.title`)}
                 </h2>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  {s.desc}
+                  {t(`services.items.${s.key}.desc`)}
                 </p>
               </article>
             );

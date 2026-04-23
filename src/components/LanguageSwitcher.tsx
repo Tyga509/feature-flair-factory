@@ -33,16 +33,16 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <div ref={ref} className="fixed top-4 right-4 z-[60]">
+    <div ref={ref} className="fixed top-3 right-3 sm:top-4 sm:right-4 z-[100]">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 rounded-full bg-background/90 backdrop-blur-md border border-border shadow-soft px-3 py-2 text-sm font-medium hover:bg-secondary transition-colors"
+        className="flex items-center gap-2 rounded-full bg-primary text-primary-foreground shadow-elegant px-3.5 py-2 text-sm font-semibold hover:bg-primary/90 transition-colors ring-2 ring-background"
         aria-label={t("lang.label")}
       >
-        <Globe className="h-4 w-4 text-primary" />
-        <span className="hidden sm:inline">{current.flag}</span>
-        <span className="uppercase tracking-wide text-xs">{current.code}</span>
+        <Globe className="h-4 w-4" />
+        <span>{mounted ? current.flag : "🌐"}</span>
+        <span className="uppercase tracking-wide text-xs">{mounted ? current.code : "fr"}</span>
       </button>
       {open && (
         <div className="absolute top-12 right-0 w-44 rounded-xl bg-background border border-border shadow-elegant overflow-hidden animate-fade-in">

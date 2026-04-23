@@ -3,6 +3,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CartProvider } from "@/context/CartContext";
 import { Toaster } from "@/components/ui/sonner";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import "@/i18n";
 
 import appCss from "../styles.css?url";
 
@@ -71,6 +73,7 @@ function RootComponent() {
   return (
     <CartProvider>
       <div className="min-h-screen flex flex-col">
+        <LanguageSwitcher />
         <Header />
         <main className="flex-1">
           <Outlet />

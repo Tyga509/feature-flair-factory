@@ -1,15 +1,17 @@
 import { ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { formatPrice, type Bouquet } from "@/data/bouquets";
 
 export function BouquetCard({ bouquet }: { bouquet: Bouquet }) {
   const { addItem } = useCart();
+  const { t } = useTranslation();
 
   const handleAdd = () => {
     addItem(bouquet);
-    toast.success(`${bouquet.name} ajouté au panier 🌸`);
+    toast.success(t("common.addedToCart", { name: bouquet.name }));
   };
 
   return (
@@ -33,7 +35,7 @@ export function BouquetCard({ bouquet }: { bouquet: Bouquet }) {
           </span>
           <Button onClick={handleAdd} size="sm" className="gap-1.5 rounded-full">
             <ShoppingBag className="h-4 w-4" />
-            Ajouter
+            {t("common.add")}
           </Button>
         </div>
       </div>

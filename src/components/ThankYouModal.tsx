@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Flower2, CheckCircle2 } from "lucide-react";
+import { Trans, useTranslation } from "react-i18next";
 
 type Props = {
   open: boolean;
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export function ThankYouModal({ open, onClose, orderNumber, total }: Props) {
+  const { t } = useTranslation();
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-md text-center bg-gradient-romantic border-accent/40">
@@ -19,22 +21,21 @@ export function ThankYouModal({ open, onClose, orderNumber, total }: Props) {
             <CheckCircle2 className="h-6 w-6 text-accent absolute -bottom-1 -right-1 bg-background rounded-full" />
           </div>
           <DialogTitle className="font-display text-3xl text-primary">
-            Merci infiniment 🌸
+            {t("thanks.title")}
           </DialogTitle>
           <DialogDescription className="text-base text-foreground/80 leading-relaxed">
-            Votre commande chez <strong>SAMAYOO FLOWERS</strong> a bien été enregistrée.
-            Nous vous contacterons sous peu pour confirmer la livraison.
+            <Trans i18nKey="thanks.desc" components={[<strong key="0" />]} />
           </DialogDescription>
 
           <div className="w-full bg-card/80 rounded-xl p-4 text-sm space-y-1 mt-2">
-            <p className="text-muted-foreground">Numéro de commande</p>
+            <p className="text-muted-foreground">{t("thanks.orderNumber")}</p>
             <p className="font-display text-xl text-primary">#{orderNumber}</p>
-            <p className="text-muted-foreground mt-2">Total</p>
+            <p className="text-muted-foreground mt-2">{t("thanks.total")}</p>
             <p className="font-semibold text-foreground">{total}</p>
           </div>
 
           <Button onClick={onClose} className="rounded-full mt-2 px-8">
-            Continuer
+            {t("thanks.continue")}
           </Button>
         </div>
       </DialogContent>

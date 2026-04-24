@@ -14,7 +14,7 @@ export function Preloader() {
   useEffect(() => {
     if (!mounted) return
     setVisible(true)
-    const timer = setTimeout(() => setVisible(false), 2000)
+    const timer = setTimeout(() => setVisible(false), 1000)
     return () => clearTimeout(timer)
   }, [pathname, mounted])
 

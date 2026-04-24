@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import heroSpring from "@/assets/hero-spring-break.jpg";
+
 import hero1 from "@/assets/hero-1.jpg";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
@@ -35,7 +35,7 @@ import hero32 from "@/assets/hero-32.jpg";
 import hero33 from "@/assets/hero-33.jpg";
 
 const slides = [
-  { src: heroSpring, alt: "Spring Break — Des fleurs spéciales pour des mères spéciales" },
+  
   { src: hero1, alt: "Boutique de roses élégantes" },
   { src: hero2, alt: "Bouquet de pivoines pastel" },
   { src: hero3, alt: "Composition de mariage romantique" },

@@ -75,7 +75,6 @@ function RootComponent() {
     <CartProvider>
       <Preloader />
       <div className="min-h-screen flex flex-col">
-        <LanguageSwitcher />
         <Header />
         <main className="flex-1">
           <Outlet />

@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { CartProvider } from "@/context/CartContext";
 import { Toaster } from "@/components/ui/sonner";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { Preloader } from "@/components/Preloader";
 import "@/i18n";
 
 import appCss from "../styles.css?url";
@@ -72,6 +73,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   return (
     <CartProvider>
+      <Preloader />
       <div className="min-h-screen flex flex-col">
         <LanguageSwitcher />
         <Header />

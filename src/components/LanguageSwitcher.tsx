@@ -33,19 +33,19 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <div ref={ref} className="fixed top-3 right-3 sm:top-4 sm:right-4 z-[100]">
+    <div ref={ref} className="relative">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 rounded-full bg-primary text-primary-foreground shadow-elegant px-3.5 py-2 text-sm font-semibold hover:bg-primary/90 transition-colors ring-2 ring-background"
+        className="flex items-center gap-1.5 rounded-full bg-primary text-primary-foreground shadow-elegant px-2.5 py-1.5 sm:px-3.5 sm:py-2 text-xs sm:text-sm font-semibold hover:bg-primary/90 transition-colors"
         aria-label={t("lang.label")}
       >
-        <Globe className="h-4 w-4" />
-        <span>{mounted ? current.flag : "🌐"}</span>
-        <span className="uppercase tracking-wide text-xs">{mounted ? current.code : "fr"}</span>
+        <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+        <span className="hidden xs:inline">{mounted ? current.flag : "🌐"}</span>
+        <span className="uppercase tracking-wide text-[10px] sm:text-xs">{mounted ? current.code : "fr"}</span>
       </button>
       {open && (
-        <div className="absolute top-12 right-0 w-44 rounded-xl bg-background border border-border shadow-elegant overflow-hidden animate-fade-in">
+        <div className="absolute top-11 right-0 w-44 rounded-xl bg-background border border-border shadow-elegant overflow-hidden animate-fade-in z-50">
           {langs.map((l) => (
             <button
               key={l.code}

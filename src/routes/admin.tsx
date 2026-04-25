@@ -2,12 +2,38 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { 
   Plus, Edit, Trash2, ShoppingBag, Hammer, Package, 
-  Users, Calendar, Phone, Lock, Mail, Eye, EyeOff, LogOut 
+  Users, Calendar, Phone, Lock, Mail, Eye, EyeOff, LogOut,
+  Search, Image as ImageIcon
 } from 'lucide-react'
 
 export const Route = createFileRoute('/admin')({
   component: AdminPage,
 })
+
+type ItemRow = {
+  id: string
+  name: string
+  details: string
+}
+
+const initialData: Record<string, ItemRow[]> = {
+  boutique: [
+    { id: 'b1', name: 'Bouquet Romance', details: '1500 HTG · Stock 12' },
+    { id: 'b2', name: 'Bouquet Saint-Valentin', details: '2000 HTG · Stock 8' },
+  ],
+  artisanat: [
+    { id: 'a1', name: 'Vase tressé', details: '900 HTG · Stock 5' },
+  ],
+  commandes: [
+    { id: 'c1', name: 'SAM-20260424-AB12', details: 'Marie L. · 3500 HTG · En attente' },
+  ],
+  clients: [
+    { id: 'cl1', name: 'Marie Lubin', details: '+509 1234 5678 · Port-au-Prince' },
+  ],
+  galerie: [
+    { id: 'g1', name: 'Mariage Juin 2025', details: 'Image · Mariage' },
+  ],
+}
 
 function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -15,11 +41,16 @@ function AdminPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [data, setData] = useState<Record<string, ItemRow[]>>(initialData)
+  const [search, setSearch] = useState<Record<string, string>>({
+    boutique: '', artisanat: '', commandes: '', clients: '', galerie: ''
+  })
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editName, setEditName] = useState('')
+  const [editDetails, setEditDetails] = useState('')
 
-  // Gestion de la connexion
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
-    // Identifiants configurés selon tes instructions
     if (email === "samarabendieunicavictor@gmail.com" && password === "Samayoo2026") {
       setIsAuthenticated(true)
     } else {
@@ -27,7 +58,6 @@ function AdminPage() {
     }
   }
 
-  // ÉCRAN DE CONNEXION (S'affiche si non connecté)
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -90,13 +120,48 @@ function AdminPage() {
     )
   }
 
-  // DASHBOARD (S'affiche après connexion réussie)
   const tabs = [
     { id: 'boutique', label: 'Boutique', icon: <ShoppingBag size={20} /> },
     { id: 'artisanat', label: 'Artisanat', icon: <Hammer size={20} /> },
     { id: 'commandes', label: 'Commandes', icon: <Package size={20} /> },
     { id: 'clients', label: 'Clients', icon: <Users size={20} /> },
+    { id: 'galerie', label: 'Galerie', icon: <ImageIcon size={20} /> },
   ]
+
+  const handleDelete = (id: string) => {
+    if (!confirm('Supprimer cet élément ?')) return
+    setData(prev => ({ ...prev, [activeTab]: prev[activeTab].filter(r => r.id !== id) }))
+  }
+
+  const startEdit = (row: ItemRow) => {
+    setEditingId(row.id)
+    setEditName(row.name)
+    setEditDetails(row.details)
+  }
+
+  const saveEdit = () => {
+    if (!editingId) return
+    setData(prev => ({
+      ...prev,
+      [activeTab]: prev[activeTab].map(r =>
+        r.id === editingId ? { ...r, name: editName, details: editDetails } : r
+      )
+    }))
+    setEditingId(null)
+  }
+
+  const currentSearch = search[activeTab] ?? ''
+  const rows = (data[activeTab] ?? []).filter(r => {
+    const q = currentSearch.toLowerCase().trim()
+    if (!q) return true
+    return r.name.toLowerCase().includes(q) || r.details.toLowerCase().includes(q)
+  })
+
+  const formTitle =
+    activeTab === 'commandes' ? 'Nouvelle Commande'
+    : activeTab === 'clients' ? 'Nouveau Client'
+    : activeTab === 'galerie' ? 'Ajouter une image à la Galerie'
+    : `Ajouter un article (${activeTab})`
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
@@ -119,12 +184,11 @@ function AdminPage() {
           </button>
         </header>
 
-        {/* Navigation des Onglets */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
+        <div className="flex flex-wrap justify-center gap-3 mb-6">
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => { setActiveTab(tab.id); setEditingId(null) }}
               className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all shadow-sm ${
                 activeTab === tab.id 
                 ? 'bg-green-600 text-white scale-105 shadow-green-200' 
@@ -137,12 +201,25 @@ function AdminPage() {
           ))}
         </div>
 
+        {/* Barre de recherche horizontale avec loupe */}
+        <div className="mb-8 bg-white rounded-2xl shadow-sm border border-gray-100 p-3">
+          <div className="relative w-full">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              value={currentSearch}
+              onChange={(e) => setSearch(prev => ({ ...prev, [activeTab]: e.target.value }))}
+              placeholder={`Rechercher dans ${tabs.find(t => t.id === activeTab)?.label}...`}
+              className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-green-500 transition-all"
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* FORMULAIRE DYNAMIQUE */}
           <div className="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <h2 className="text-xl font-bold mb-6 text-gray-800 flex items-center gap-2">
               <Plus className="text-green-600" size={24} />
-              {activeTab === 'commandes' ? 'Nouvelle Commande' : activeTab === 'clients' ? 'Nouveau Client' : `Ajouter un article (${activeTab})`}
+              {formTitle}
             </h2>
             
             <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
@@ -185,15 +262,33 @@ function AdminPage() {
                 </>
               )}
 
+              {activeTab === 'galerie' && (
+                <>
+                  <input type="text" placeholder="Titre de l'image" className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-green-500" />
+                  <select className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                    <option>Catégorie: Mariage</option>
+                    <option>Catégorie: Saint-Valentin</option>
+                    <option>Catégorie: Deuil</option>
+                    <option>Catégorie: Événement</option>
+                  </select>
+                  <textarea placeholder="Description (optionnelle)" className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-green-500" rows={2}></textarea>
+                  <label className="block">
+                    <span className="text-sm text-gray-600 mb-2 block">Image à insérer dans la Galerie</span>
+                    <input type="file" accept="image/*" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-green-50 file:text-green-700" />
+                  </label>
+                </>
+              )}
+
               <button type="submit" className="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 shadow-md transition-all active:scale-95">
-                Enregistrer dans la base de données
+                {activeTab === 'galerie' ? 'Publier dans la Galerie' : 'Enregistrer dans la base de données'}
               </button>
             </form>
           </div>
 
-          {/* LISTE DE GESTION */}
           <div className="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 overflow-x-auto">
-            <h2 className="text-xl font-bold mb-6 text-gray-800">Liste des {activeTab}</h2>
+            <h2 className="text-xl font-bold mb-6 text-gray-800">
+              Liste des {tabs.find(t => t.id === activeTab)?.label} ({rows.length})
+            </h2>
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -203,14 +298,52 @@ function AdminPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                <tr>
-                  <td className="px-4 py-4 whitespace-nowrap text-gray-700 font-medium italic">Exemple {activeTab}</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-gray-400 text-sm italic">Aucune donnée réelle...</td>
-                  <td className="px-4 py-4 whitespace-nowrap text-right">
-                    <button className="text-blue-500 hover:bg-blue-50 p-2 rounded-lg transition-colors"><Edit size={18} /></button>
-                    <button className="text-red-500 hover:bg-red-50 p-2 rounded-lg ml-2 transition-colors"><Trash2 size={18} /></button>
-                  </td>
-                </tr>
+                {rows.length === 0 && (
+                  <tr>
+                    <td colSpan={3} className="px-4 py-6 text-center text-gray-400 italic">
+                      Aucun résultat.
+                    </td>
+                  </tr>
+                )}
+                {rows.map((row) => (
+                  <tr key={row.id}>
+                    {editingId === row.id ? (
+                      <>
+                        <td className="px-4 py-3">
+                          <input
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                            className="w-full border p-2 rounded-md outline-none focus:ring-2 focus:ring-green-500"
+                          />
+                        </td>
+                        <td className="px-4 py-3">
+                          <input
+                            value={editDetails}
+                            onChange={(e) => setEditDetails(e.target.value)}
+                            className="w-full border p-2 rounded-md outline-none focus:ring-2 focus:ring-green-500"
+                          />
+                        </td>
+                        <td className="px-4 py-3 text-right whitespace-nowrap">
+                          <button onClick={saveEdit} className="text-green-600 font-semibold hover:bg-green-50 px-3 py-1 rounded-lg">Sauver</button>
+                          <button onClick={() => setEditingId(null)} className="ml-2 text-gray-500 hover:bg-gray-100 px-3 py-1 rounded-lg">Annuler</button>
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td className="px-4 py-4 whitespace-nowrap text-gray-700 font-medium">{row.name}</td>
+                        <td className="px-4 py-4 whitespace-nowrap text-gray-500 text-sm">{row.details}</td>
+                        <td className="px-4 py-4 whitespace-nowrap text-right">
+                          <button onClick={() => startEdit(row)} className="text-blue-500 hover:bg-blue-50 p-2 rounded-lg transition-colors" aria-label="Modifier">
+                            <Edit size={18} />
+                          </button>
+                          <button onClick={() => handleDelete(row.id)} className="text-red-500 hover:bg-red-50 p-2 rounded-lg ml-2 transition-colors" aria-label="Supprimer">
+                            <Trash2 size={18} />
+                          </button>
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

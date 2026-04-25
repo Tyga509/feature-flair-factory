@@ -18,6 +18,7 @@ export function Header() {
     { to: "/artisanat", label: t("nav.artisanat") },
     { to: "/services", label: t("nav.services") },
     { to: "/galerie", label: t("nav.galerie") },
+    { to: "/coulisses", label: t("nav.coulisses") },
     { to: "/a-propos", label: t("nav.about") },
     { to: "/contact", label: t("nav.contact") },
   ] as const;

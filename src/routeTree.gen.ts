@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as PanierRouteImport } from './routes/panier'
 import { Route as GalerieRouteImport } from './routes/galerie'
+import { Route as CoulissesRouteImport } from './routes/coulisses'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BoutiqueRouteImport } from './routes/boutique'
 import { Route as ArtisanatRouteImport } from './routes/artisanat'
@@ -32,6 +33,11 @@ const PanierRoute = PanierRouteImport.update({
 const GalerieRoute = GalerieRouteImport.update({
   id: '/galerie',
   path: '/galerie',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoulissesRoute = CoulissesRouteImport.update({
+  id: '/coulisses',
+  path: '/coulisses',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/artisanat': typeof ArtisanatRoute
   '/boutique': typeof BoutiqueRoute
   '/contact': typeof ContactRoute
+  '/coulisses': typeof CoulissesRoute
   '/galerie': typeof GalerieRoute
   '/panier': typeof PanierRoute
   '/services': typeof ServicesRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/artisanat': typeof ArtisanatRoute
   '/boutique': typeof BoutiqueRoute
   '/contact': typeof ContactRoute
+  '/coulisses': typeof CoulissesRoute
   '/galerie': typeof GalerieRoute
   '/panier': typeof PanierRoute
   '/services': typeof ServicesRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/artisanat': typeof ArtisanatRoute
   '/boutique': typeof BoutiqueRoute
   '/contact': typeof ContactRoute
+  '/coulisses': typeof CoulissesRoute
   '/galerie': typeof GalerieRoute
   '/panier': typeof PanierRoute
   '/services': typeof ServicesRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/artisanat'
     | '/boutique'
     | '/contact'
+    | '/coulisses'
     | '/galerie'
     | '/panier'
     | '/services'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/artisanat'
     | '/boutique'
     | '/contact'
+    | '/coulisses'
     | '/galerie'
     | '/panier'
     | '/services'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/artisanat'
     | '/boutique'
     | '/contact'
+    | '/coulisses'
     | '/galerie'
     | '/panier'
     | '/services'
@@ -142,6 +154,7 @@ export interface RootRouteChildren {
   ArtisanatRoute: typeof ArtisanatRoute
   BoutiqueRoute: typeof BoutiqueRoute
   ContactRoute: typeof ContactRoute
+  CoulissesRoute: typeof CoulissesRoute
   GalerieRoute: typeof GalerieRoute
   PanierRoute: typeof PanierRoute
   ServicesRoute: typeof ServicesRoute
@@ -168,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/galerie'
       fullPath: '/galerie'
       preLoaderRoute: typeof GalerieRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coulisses': {
+      id: '/coulisses'
+      path: '/coulisses'
+      fullPath: '/coulisses'
+      preLoaderRoute: typeof CoulissesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -222,6 +242,7 @@ const rootRouteChildren: RootRouteChildren = {
   ArtisanatRoute: ArtisanatRoute,
   BoutiqueRoute: BoutiqueRoute,
   ContactRoute: ContactRoute,
+  CoulissesRoute: CoulissesRoute,
   GalerieRoute: GalerieRoute,
   PanierRoute: PanierRoute,
   ServicesRoute: ServicesRoute,

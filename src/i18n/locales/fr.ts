@@ -5,6 +5,7 @@ export const fr = {
     artisanat: "Artisanat",
     services: "Services",
     galerie: "Galerie",
+    coulisses: "Coulisses",
     about: "À propos",
     contact: "Contact",
     cart: "Panier",

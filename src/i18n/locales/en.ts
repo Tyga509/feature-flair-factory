@@ -5,6 +5,7 @@ export const en = {
     artisanat: "Crafts",
     services: "Services",
     galerie: "Gallery",
+    coulisses: "Behind the Scenes",
     about: "About",
     contact: "Contact",
     cart: "Cart",

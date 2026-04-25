@@ -5,6 +5,7 @@ export const ht = {
     artisanat: "Atizana",
     services: "Sèvis",
     galerie: "Galri",
+    coulisses: "Koulis",
     about: "Konsènan",
     contact: "Kontak",
     cart: "Pànye",

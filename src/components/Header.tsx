@@ -39,16 +39,16 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-5 lg:gap-7">
           {navLinks.map((link) => (
             <Link
               key={link.to}
               to={link.to}
               activeOptions={{ exact: link.to === "/" }}
-              className="story-link text-sm font-medium tracking-wide text-foreground/80 hover:text-primary transition-colors duration-300"
+              className="story-link whitespace-nowrap text-sm font-medium tracking-wide text-foreground/80 hover:text-primary transition-colors duration-300"
               activeProps={{
                 className:
-                  "story-link text-sm font-medium tracking-wide text-primary px-3 py-1.5 rounded-full bg-secondary/60 ring-1 ring-accent/60",
+                  "story-link whitespace-nowrap text-sm font-medium tracking-wide text-primary px-3 py-1.5 rounded-full bg-secondary/60 ring-1 ring-accent/60",
               }}
             >
               {link.label}

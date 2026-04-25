@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { 
   Plus, Edit, Trash2, ShoppingBag, Hammer, Package, 
   Users, Calendar, Phone, Lock, Mail, Eye, EyeOff, LogOut,
-  Search, Image as ImageIcon
+  Search, Image as ImageIcon, Video as VideoIcon
 } from 'lucide-react'
 
 export const Route = createFileRoute('/admin')({
@@ -33,6 +33,9 @@ const initialData: Record<string, ItemRow[]> = {
   galerie: [
     { id: 'g1', name: 'Mariage Juin 2025', details: 'Image · Mariage' },
   ],
+  coulisses: [
+    { id: 'v1', name: 'Livraison à Pétion-Ville', details: 'Vidéo · Livraisons' },
+  ],
 }
 
 function AdminPage() {
@@ -43,7 +46,7 @@ function AdminPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [data, setData] = useState<Record<string, ItemRow[]>>(initialData)
   const [search, setSearch] = useState<Record<string, string>>({
-    boutique: '', artisanat: '', commandes: '', clients: '', galerie: ''
+    boutique: '', artisanat: '', commandes: '', clients: '', galerie: '', coulisses: ''
   })
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editName, setEditName] = useState('')
@@ -126,6 +129,7 @@ function AdminPage() {
     { id: 'commandes', label: 'Commandes', icon: <Package size={20} /> },
     { id: 'clients', label: 'Clients', icon: <Users size={20} /> },
     { id: 'galerie', label: 'Galerie', icon: <ImageIcon size={20} /> },
+    { id: 'coulisses', label: 'Coulisses', icon: <VideoIcon size={20} /> },
   ]
 
   const handleDelete = (id: string) => {
@@ -161,6 +165,7 @@ function AdminPage() {
     activeTab === 'commandes' ? 'Nouvelle Commande'
     : activeTab === 'clients' ? 'Nouveau Client'
     : activeTab === 'galerie' ? 'Ajouter une image à la Galerie'
+    : activeTab === 'coulisses' ? 'Ajouter une vidéo aux Coulisses'
     : `Ajouter un article (${activeTab})`
 
   return (
@@ -279,8 +284,32 @@ function AdminPage() {
                 </>
               )}
 
+              {activeTab === 'coulisses' && (
+                <>
+                  <input type="text" placeholder="Titre de la vidéo" className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-green-500" />
+                  <select className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                    <option>Catégorie: Préparation</option>
+                    <option>Catégorie: Livraisons</option>
+                    <option>Catégorie: Moments</option>
+                  </select>
+                  <textarea placeholder="Description (optionnelle)" className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-green-500" rows={2}></textarea>
+                  <label className="block">
+                    <span className="text-sm text-gray-600 mb-2 block">Vidéo (MP4, WebM)</span>
+                    <input type="file" accept="video/*" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-green-50 file:text-green-700" />
+                  </label>
+                  <label className="block">
+                    <span className="text-sm text-gray-600 mb-2 block">Miniature (poster, optionnelle)</span>
+                    <input type="file" accept="image/*" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-green-50 file:text-green-700" />
+                  </label>
+                </>
+              )}
+
               <button type="submit" className="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 shadow-md transition-all active:scale-95">
-                {activeTab === 'galerie' ? 'Publier dans la Galerie' : 'Enregistrer dans la base de données'}
+                {activeTab === 'galerie'
+                  ? 'Publier dans la Galerie'
+                  : activeTab === 'coulisses'
+                  ? 'Publier dans les Coulisses'
+                  : 'Enregistrer dans la base de données'}
               </button>
             </form>
           </div>

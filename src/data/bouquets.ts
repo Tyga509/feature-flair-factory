@@ -23,7 +23,7 @@ export type Bouquet = {
   price: number; // in GDES
   image: string;
   alt: string;
-  category: BouquetCategory;
+  category?: BouquetCategory;
 };
 
 export const bouquets: Bouquet[] = [

@@ -11,100 +11,61 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as PanierRouteImport } from './routes/panier'
+import { Route as GrandsProjetsRouteImport } from './routes/grands-projets'
 import { Route as GalerieRouteImport } from './routes/galerie'
 import { Route as CoulissesRouteImport } from './routes/coulisses'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as ComposezRouteImport } from './routes/composez'
 import { Route as BoutiqueRouteImport } from './routes/boutique'
 import { Route as ArtisanatRouteImport } from './routes/artisanat'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AbonnementsRouteImport } from './routes/abonnements'
 import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as IndexRouteImport } from './routes/index'
 
-const ServicesRoute = ServicesRouteImport.update({
-  id: '/services',
-  path: '/services',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PanierRoute = PanierRouteImport.update({
-  id: '/panier',
-  path: '/panier',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GalerieRoute = GalerieRouteImport.update({
-  id: '/galerie',
-  path: '/galerie',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CoulissesRoute = CoulissesRouteImport.update({
-  id: '/coulisses',
-  path: '/coulisses',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BoutiqueRoute = BoutiqueRouteImport.update({
-  id: '/boutique',
-  path: '/boutique',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ArtisanatRoute = ArtisanatRouteImport.update({
-  id: '/artisanat',
-  path: '/artisanat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AProposRoute = AProposRouteImport.update({
-  id: '/a-propos',
-  path: '/a-propos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const ServicesRoute = ServicesRouteImport.update({ id: '/services', path: '/services', getParentRoute: () => rootRouteImport } as any)
+const PanierRoute = PanierRouteImport.update({ id: '/panier', path: '/panier', getParentRoute: () => rootRouteImport } as any)
+const GrandsProjetsRoute = GrandsProjetsRouteImport.update({ id: '/grands-projets', path: '/grands-projets', getParentRoute: () => rootRouteImport } as any)
+const GalerieRoute = GalerieRouteImport.update({ id: '/galerie', path: '/galerie', getParentRoute: () => rootRouteImport } as any)
+const CoulissesRoute = CoulissesRouteImport.update({ id: '/coulisses', path: '/coulisses', getParentRoute: () => rootRouteImport } as any)
+const ContactRoute = ContactRouteImport.update({ id: '/contact', path: '/contact', getParentRoute: () => rootRouteImport } as any)
+const ComposezRoute = ComposezRouteImport.update({ id: '/composez', path: '/composez', getParentRoute: () => rootRouteImport } as any)
+const BoutiqueRoute = BoutiqueRouteImport.update({ id: '/boutique', path: '/boutique', getParentRoute: () => rootRouteImport } as any)
+const ArtisanatRoute = ArtisanatRouteImport.update({ id: '/artisanat', path: '/artisanat', getParentRoute: () => rootRouteImport } as any)
+const AdminRoute = AdminRouteImport.update({ id: '/admin', path: '/admin', getParentRoute: () => rootRouteImport } as any)
+const AbonnementsRoute = AbonnementsRouteImport.update({ id: '/abonnements', path: '/abonnements', getParentRoute: () => rootRouteImport } as any)
+const AProposRoute = AProposRouteImport.update({ id: '/a-propos', path: '/a-propos', getParentRoute: () => rootRouteImport } as any)
+const IndexRoute = IndexRouteImport.update({ id: '/', path: '/', getParentRoute: () => rootRouteImport } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
+  '/abonnements': typeof AbonnementsRoute
   '/admin': typeof AdminRoute
   '/artisanat': typeof ArtisanatRoute
   '/boutique': typeof BoutiqueRoute
+  '/composez': typeof ComposezRoute
   '/contact': typeof ContactRoute
   '/coulisses': typeof CoulissesRoute
   '/galerie': typeof GalerieRoute
+  '/grands-projets': typeof GrandsProjetsRoute
   '/panier': typeof PanierRoute
   '/services': typeof ServicesRoute
 }
-export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/a-propos': typeof AProposRoute
-  '/admin': typeof AdminRoute
-  '/artisanat': typeof ArtisanatRoute
-  '/boutique': typeof BoutiqueRoute
-  '/contact': typeof ContactRoute
-  '/coulisses': typeof CoulissesRoute
-  '/galerie': typeof GalerieRoute
-  '/panier': typeof PanierRoute
-  '/services': typeof ServicesRoute
-}
+export interface FileRoutesByTo extends FileRoutesByFullPath {}
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
+  '/abonnements': typeof AbonnementsRoute
   '/admin': typeof AdminRoute
   '/artisanat': typeof ArtisanatRoute
   '/boutique': typeof BoutiqueRoute
+  '/composez': typeof ComposezRoute
   '/contact': typeof ContactRoute
   '/coulisses': typeof CoulissesRoute
   '/galerie': typeof GalerieRoute
+  '/grands-projets': typeof GrandsProjetsRoute
   '/panier': typeof PanierRoute
   '/services': typeof ServicesRoute
 }
@@ -113,36 +74,45 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/a-propos'
+    | '/abonnements'
     | '/admin'
     | '/artisanat'
     | '/boutique'
+    | '/composez'
     | '/contact'
     | '/coulisses'
     | '/galerie'
+    | '/grands-projets'
     | '/panier'
     | '/services'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/a-propos'
+    | '/abonnements'
     | '/admin'
     | '/artisanat'
     | '/boutique'
+    | '/composez'
     | '/contact'
     | '/coulisses'
     | '/galerie'
+    | '/grands-projets'
     | '/panier'
     | '/services'
   id:
     | '__root__'
     | '/'
     | '/a-propos'
+    | '/abonnements'
     | '/admin'
     | '/artisanat'
     | '/boutique'
+    | '/composez'
     | '/contact'
     | '/coulisses'
     | '/galerie'
+    | '/grands-projets'
     | '/panier'
     | '/services'
   fileRoutesById: FileRoutesById
@@ -150,102 +120,51 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AProposRoute: typeof AProposRoute
+  AbonnementsRoute: typeof AbonnementsRoute
   AdminRoute: typeof AdminRoute
   ArtisanatRoute: typeof ArtisanatRoute
   BoutiqueRoute: typeof BoutiqueRoute
+  ComposezRoute: typeof ComposezRoute
   ContactRoute: typeof ContactRoute
   CoulissesRoute: typeof CoulissesRoute
   GalerieRoute: typeof GalerieRoute
+  GrandsProjetsRoute: typeof GrandsProjetsRoute
   PanierRoute: typeof PanierRoute
   ServicesRoute: typeof ServicesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/services': {
-      id: '/services'
-      path: '/services'
-      fullPath: '/services'
-      preLoaderRoute: typeof ServicesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/panier': {
-      id: '/panier'
-      path: '/panier'
-      fullPath: '/panier'
-      preLoaderRoute: typeof PanierRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/galerie': {
-      id: '/galerie'
-      path: '/galerie'
-      fullPath: '/galerie'
-      preLoaderRoute: typeof GalerieRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/coulisses': {
-      id: '/coulisses'
-      path: '/coulisses'
-      fullPath: '/coulisses'
-      preLoaderRoute: typeof CoulissesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/boutique': {
-      id: '/boutique'
-      path: '/boutique'
-      fullPath: '/boutique'
-      preLoaderRoute: typeof BoutiqueRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/artisanat': {
-      id: '/artisanat'
-      path: '/artisanat'
-      fullPath: '/artisanat'
-      preLoaderRoute: typeof ArtisanatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/a-propos': {
-      id: '/a-propos'
-      path: '/a-propos'
-      fullPath: '/a-propos'
-      preLoaderRoute: typeof AProposRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+    '/services': { id: '/services'; path: '/services'; fullPath: '/services'; preLoaderRoute: typeof ServicesRouteImport; parentRoute: typeof rootRouteImport }
+    '/panier': { id: '/panier'; path: '/panier'; fullPath: '/panier'; preLoaderRoute: typeof PanierRouteImport; parentRoute: typeof rootRouteImport }
+    '/grands-projets': { id: '/grands-projets'; path: '/grands-projets'; fullPath: '/grands-projets'; preLoaderRoute: typeof GrandsProjetsRouteImport; parentRoute: typeof rootRouteImport }
+    '/galerie': { id: '/galerie'; path: '/galerie'; fullPath: '/galerie'; preLoaderRoute: typeof GalerieRouteImport; parentRoute: typeof rootRouteImport }
+    '/coulisses': { id: '/coulisses'; path: '/coulisses'; fullPath: '/coulisses'; preLoaderRoute: typeof CoulissesRouteImport; parentRoute: typeof rootRouteImport }
+    '/contact': { id: '/contact'; path: '/contact'; fullPath: '/contact'; preLoaderRoute: typeof ContactRouteImport; parentRoute: typeof rootRouteImport }
+    '/composez': { id: '/composez'; path: '/composez'; fullPath: '/composez'; preLoaderRoute: typeof ComposezRouteImport; parentRoute: typeof rootRouteImport }
+    '/boutique': { id: '/boutique'; path: '/boutique'; fullPath: '/boutique'; preLoaderRoute: typeof BoutiqueRouteImport; parentRoute: typeof rootRouteImport }
+    '/artisanat': { id: '/artisanat'; path: '/artisanat'; fullPath: '/artisanat'; preLoaderRoute: typeof ArtisanatRouteImport; parentRoute: typeof rootRouteImport }
+    '/admin': { id: '/admin'; path: '/admin'; fullPath: '/admin'; preLoaderRoute: typeof AdminRouteImport; parentRoute: typeof rootRouteImport }
+    '/abonnements': { id: '/abonnements'; path: '/abonnements'; fullPath: '/abonnements'; preLoaderRoute: typeof AbonnementsRouteImport; parentRoute: typeof rootRouteImport }
+    '/a-propos': { id: '/a-propos'; path: '/a-propos'; fullPath: '/a-propos'; preLoaderRoute: typeof AProposRouteImport; parentRoute: typeof rootRouteImport }
+    '/': { id: '/'; path: '/'; fullPath: '/'; preLoaderRoute: typeof IndexRouteImport; parentRoute: typeof rootRouteImport }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AProposRoute: AProposRoute,
-  AdminRoute: AdminRoute,
-  ArtisanatRoute: ArtisanatRoute,
-  BoutiqueRoute: BoutiqueRoute,
-  ContactRoute: ContactRoute,
-  CoulissesRoute: CoulissesRoute,
-  GalerieRoute: GalerieRoute,
-  PanierRoute: PanierRoute,
-  ServicesRoute: ServicesRoute,
+  IndexRoute,
+  AProposRoute,
+  AbonnementsRoute,
+  AdminRoute,
+  ArtisanatRoute,
+  BoutiqueRoute,
+  ComposezRoute,
+  ContactRoute,
+  CoulissesRoute,
+  GalerieRoute,
+  GrandsProjetsRoute,
+  PanierRoute,
+  ServicesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

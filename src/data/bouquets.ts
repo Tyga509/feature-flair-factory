@@ -8,6 +8,14 @@ import tournesol from "@/assets/bouquet-tournesol.jpg";
 import luxe from "@/assets/bouquet-luxe.jpg";
 import billets from "@/assets/bouquet-billets.jpg";
 
+export type BouquetCategory =
+  | "Saint-Valentin"
+  | "Anniversaire"
+  | "Mariage"
+  | "Fête des Mères"
+  | "Événement"
+  | "Pack Célébration";
+
 export type Bouquet = {
   id: string;
   name: string;
@@ -15,6 +23,7 @@ export type Bouquet = {
   price: number; // in GDES
   image: string;
   alt: string;
+  category: BouquetCategory;
 };
 
 export const bouquets: Bouquet[] = [
@@ -25,6 +34,7 @@ export const bouquets: Bouquet[] = [
     price: 12000,
     image: romance,
     alt: "Bouquet Romance Rouge - roses rouges et gypsophile avec écrin",
+    category: "Saint-Valentin",
   },
   {
     id: "douceur-samayoo",
@@ -33,6 +43,7 @@ export const bouquets: Bouquet[] = [
     price: 19000,
     image: douceur,
     alt: "Bouquet Douceur - emballage violet avec ballon Happy Birthday",
+    category: "Anniversaire",
   },
   {
     id: "elegance",
@@ -41,6 +52,7 @@ export const bouquets: Bouquet[] = [
     price: 33000,
     image: elegance,
     alt: "Box Élégance - roses rouges et Ferrero Rocher",
+    category: "Saint-Valentin",
   },
   {
     id: "ma-bouteille",
@@ -49,6 +61,7 @@ export const bouquets: Bouquet[] = [
     price: 7000,
     image: bouteille,
     alt: "Coffret Ma Bouteille - vin, roses rouges et chocolats",
+    category: "Événement",
   },
   {
     id: "ame-soeur",
@@ -57,6 +70,7 @@ export const bouquets: Bouquet[] = [
     price: 17000,
     image: amesoeur,
     alt: "Bracelets de couple Âme Sœur - perles yin yang",
+    category: "Saint-Valentin",
   },
   {
     id: "amour-eternel",
@@ -65,6 +79,7 @@ export const bouquets: Bouquet[] = [
     price: 19000,
     image: eternel,
     alt: "Box Amour Éternel - cœur de roses rouges et Ferrero",
+    category: "Mariage",
   },
   {
     id: "soleil-tropical",
@@ -73,6 +88,7 @@ export const bouquets: Bouquet[] = [
     price: 15000,
     image: tournesol,
     alt: "Bouquet Soleil Tropical - tournesol et roses colorées",
+    category: "Fête des Mères",
   },
   {
     id: "edition-luxe",
@@ -81,14 +97,16 @@ export const bouquets: Bouquet[] = [
     price: 25000,
     image: luxe,
     alt: "Bouquet Édition Luxe - emballage monogramme noir",
+    category: "Mariage",
   },
   {
     id: "money-bouquet",
-    name: "Bouquets Argent",
-    description: "Composition originale en billets pliés en pétales façon dahlia, ornée d'un papillon doré — un cadeau aussi chic que surprenant.",
+    name: "Pack Célébration Argent",
+    description: "Composition originale en billets pliés en pétales façon dahlia, ornée d'un papillon doré — un Pack Célébration musical aussi chic que surprenant.",
     price: 28000,
     image: billets,
-    alt: "Bouquets Argent - billets pliés en pétales avec papillon doré",
+    alt: "Pack Célébration - billets pliés en pétales avec papillon doré",
+    category: "Pack Célébration",
   },
 ];
 

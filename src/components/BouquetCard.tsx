@@ -1,4 +1,4 @@
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, Music } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,8 @@ export function BouquetCard({ bouquet }: { bouquet: Bouquet }) {
     toast.success(t("common.addedToCart", { name: bouquet.name }));
   };
 
+  const isPack = bouquet.category === "Pack Célébration";
+
   return (
     <article className="group bg-card rounded-2xl overflow-hidden shadow-soft hover-lift border border-border/60 flex flex-col">
       <div className="relative aspect-square overflow-hidden bg-secondary/40">
@@ -21,10 +23,21 @@ export function BouquetCard({ bouquet }: { bouquet: Bouquet }) {
           src={bouquet.image}
           alt={bouquet.alt}
           loading="lazy"
+          decoding="async"
           width={1024}
           height={1024}
           className="h-full w-full object-contain transition-transform duration-700 group-hover:scale-105"
         />
+        {isPack && (
+          <div className="absolute top-3 right-3 bg-accent text-accent-foreground rounded-full p-2.5 shadow-elegant ring-2 ring-background animate-scale-in">
+            <Music className="h-4 w-4" />
+          </div>
+        )}
+        <div className="absolute top-3 left-3">
+          <span className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-background/90 text-primary backdrop-blur-sm">
+            {bouquet.category}
+          </span>
+        </div>
       </div>
       <div className="p-5 flex flex-col gap-3 flex-1">
         <h3 className="font-display text-xl text-foreground">{bouquet.name}</h3>

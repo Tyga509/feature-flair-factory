@@ -15,8 +15,9 @@ export function Header() {
   const navLinks = [
     { to: "/", label: t("nav.home") },
     { to: "/boutique", label: t("nav.boutique") },
-    { to: "/artisanat", label: t("nav.artisanat") },
-    { to: "/services", label: t("nav.services") },
+    { to: "/composez", label: "Composez" },
+    { to: "/abonnements", label: "Abonnements" },
+    { to: "/grands-projets", label: "Grands Projets" },
     { to: "/galerie", label: t("nav.galerie") },
     { to: "/coulisses", label: t("nav.coulisses") },
     { to: "/a-propos", label: t("nav.about") },
@@ -57,8 +58,6 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-1.5 sm:gap-2">
-          <ThemeToggle />
-          <LanguageSwitcher />
           <Link
             to="/panier"
             className="relative p-2.5 rounded-full hover:bg-secondary transition-colors group"
@@ -71,6 +70,8 @@ export function Header() {
               </span>
             )}
           </Link>
+          <ThemeToggle />
+          <LanguageSwitcher />
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}

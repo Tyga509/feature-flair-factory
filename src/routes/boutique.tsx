@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useState, useEffect } from "react";
+import { Search } from "lucide-react";
 import { BouquetCard } from "@/components/BouquetCard";
-import { bouquets } from "@/data/bouquets";
+import { bouquets, type BouquetCategory } from "@/data/bouquets";
 
 export const Route = createFileRoute("/boutique")({
   head: () => ({
@@ -14,7 +16,48 @@ export const Route = createFileRoute("/boutique")({
   component: BoutiquePage,
 });
 
+const categories: ("Tous" | BouquetCategory)[] = [
+  "Tous", "Saint-Valentin", "Anniversaire", "Mariage", "Fête des Mères", "Événement", "Pack Célébration",
+];
+
+// Smart keyword → category mapping
+const smartMap: { keywords: RegExp; category: BouquetCategory }[] = [
+  { keywords: /\b(maman|m[èe]re|mama|fete des m[èe]res|cadeau maman)\b/i, category: "Fête des Mères" },
+  { keywords: /\b(saint[- ]?valentin|amour|amoureux|valentin)\b/i, category: "Saint-Valentin" },
+  { keywords: /\b(anniversaire|birthday)\b/i, category: "Anniversaire" },
+  { keywords: /\b(mariage|wedding|noce|mari[ée])\b/i, category: "Mariage" },
+  { keywords: /\b(pack|c[ée]l[ée]bration|musique|music)\b/i, category: "Pack Célébration" },
+];
+
 function BoutiquePage() {
+  const [activeCat, setActiveCat] = useState<"Tous" | BouquetCategory>("Tous");
+  const [search, setSearch] = useState("");
+
+  // Smart filter activation
+  useEffect(() => {
+    const q = search.trim();
+    if (!q) return;
+    for (const { keywords, category } of smartMap) {
+      if (keywords.test(q)) {
+        setActiveCat(category);
+        return;
+      }
+    }
+  }, [search]);
+
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    return bouquets.filter((b) => {
+      if (activeCat !== "Tous" && b.category !== activeCat) return false;
+      if (!q) return true;
+      return (
+        b.name.toLowerCase().includes(q) ||
+        b.description.toLowerCase().includes(q) ||
+        (b.category ?? "").toLowerCase().includes(q)
+      );
+    });
+  }, [activeCat, search]);
+
   return (
     <div className="px-4 py-16">
       <div className="mx-auto max-w-6xl">
@@ -26,11 +69,46 @@ function BoutiquePage() {
           </p>
         </header>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {bouquets.map((b) => (
-            <BouquetCard key={b.id} bouquet={b} />
+        {/* Search bar */}
+        <div className="max-w-xl mx-auto mb-6">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Rechercher un bouquet… (ex : Cadeau maman)"
+              className="w-full pl-12 pr-4 py-3 rounded-full border border-border bg-card focus:outline-none focus:ring-2 focus:ring-accent transition"
+            />
+          </div>
+        </div>
+
+        {/* Category filters */}
+        <div className="flex flex-wrap justify-center gap-2 mb-10">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => setActiveCat(cat)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                activeCat === cat
+                  ? "bg-primary text-primary-foreground shadow-soft"
+                  : "bg-secondary/60 text-foreground/80 hover:bg-secondary"
+              }`}
+            >
+              {cat}
+            </button>
           ))}
         </div>
+
+        {filtered.length === 0 ? (
+          <p className="text-center text-muted-foreground py-12 italic">Aucun bouquet ne correspond à votre recherche.</p>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((b) => (
+              <BouquetCard key={b.id} bouquet={b} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

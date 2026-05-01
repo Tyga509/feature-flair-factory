@@ -14,7 +14,168 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      contracts: {
+        Row: {
+          budget: number | null
+          client_name: string
+          created_at: string
+          description: string | null
+          email: string | null
+          event_date: string | null
+          event_type: string
+          id: string
+          phone: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          budget?: number | null
+          client_name: string
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          event_date?: string | null
+          event_type: string
+          id?: string
+          phone: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          budget?: number | null
+          client_name?: string
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          event_date?: string | null
+          event_type?: string
+          id?: string
+          phone?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      custom_requests: {
+        Row: {
+          accessories: string | null
+          bouquet_type: string
+          colors: string
+          created_at: string
+          dedication: string | null
+          email: string | null
+          full_name: string
+          id: string
+          notes: string | null
+          phone: string
+          status: string
+          support: string
+          updated_at: string
+        }
+        Insert: {
+          accessories?: string | null
+          bouquet_type: string
+          colors: string
+          created_at?: string
+          dedication?: string | null
+          email?: string | null
+          full_name: string
+          id?: string
+          notes?: string | null
+          phone: string
+          status?: string
+          support: string
+          updated_at?: string
+        }
+        Update: {
+          accessories?: string | null
+          bouquet_type?: string
+          colors?: string
+          created_at?: string
+          dedication?: string | null
+          email?: string | null
+          full_name?: string
+          id?: string
+          notes?: string | null
+          phone?: string
+          status?: string
+          support?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      gallery_items: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          address: string | null
+          created_at: string
+          email: string | null
+          formula: string
+          frequency: string
+          full_name: string
+          id: string
+          notes: string | null
+          phone: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          formula: string
+          frequency?: string
+          full_name: string
+          id?: string
+          notes?: string | null
+          phone: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          formula?: string
+          frequency?: string
+          full_name?: string
+          id?: string
+          notes?: string | null
+          phone?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -53,7 +53,7 @@ function BoutiquePage() {
       return (
         b.name.toLowerCase().includes(q) ||
         b.description.toLowerCase().includes(q) ||
-        b.category.toLowerCase().includes(q)
+        (b.category ?? "").toLowerCase().includes(q)
       );
     });
   }, [activeCat, search]);

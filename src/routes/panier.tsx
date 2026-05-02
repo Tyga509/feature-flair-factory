@@ -93,11 +93,11 @@ function PanierPage() {
                     
                     <div className="flex items-center justify-between mt-auto">
                       <div className="flex items-center gap-3 bg-secondary/50 rounded-full p-1 border border-border">
-                        <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="h-8 w-8 rounded-full bg-white flex items-center justify-center hover:bg-primary hover:text-white transition-colors shadow-sm" disabled={item.quantity <= 1}>
+                        <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="h-8 w-8 rounded-full bg-background text-foreground flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors shadow-sm" disabled={item.quantity <= 1}>
                           <Minus className="h-4 w-4" />
                         </button>
-                        <span className="font-bold text-sm w-4 text-center">{item.quantity}</span>
-                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="h-8 w-8 rounded-full bg-white flex items-center justify-center hover:bg-primary hover:text-white transition-colors shadow-sm">
+                        <span className="font-bold text-sm w-4 text-center text-foreground">{item.quantity}</span>
+                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="h-8 w-8 rounded-full bg-background text-foreground flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors shadow-sm">
                           <Plus className="h-4 w-4" />
                         </button>
                       </div>

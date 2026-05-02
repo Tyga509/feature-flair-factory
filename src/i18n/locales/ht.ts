@@ -148,4 +148,23 @@ export const ht = {
     ht: "Kreyòl",
     en: "English",
   },
+  bouquets: {
+    "romance-rouge": { name: "Womans Wouj", description: "Bouke wòz wouj entans ak gypsofil, ideyal pou deklarasyon ak demand maryaj." },
+    "douceur-samayoo": { name: "Doukè Samayoo", description: "Bouke anivèsè ak anbalaj lavand epi balon Happy Birthday, pafè pou selebre yon moun espesyal." },
+    "elegance": { name: "Elegans", description: "Bwat won « Just for you » plen ak wòz wouj ak chokola Ferrero — yon kado premium ki pa ka bliye." },
+    "ma-bouteille": { name: "Boutèy Mwen", description: "Kòfre boutèy diven ak wòz wouj ak yon medayon an lò, pou ofri ak lanmou." },
+    "ame-soeur": { name: "Nanm Marye", description: "Braslè koup yin & yang an pèl, senbòl inyon ak konplisite." },
+    "amour-eternel": { name: "Lanmou Etènèl", description: "Bwat transparan an fòm kè, wòz wouj ak tiwa Ferrero Rocher — ekspresyon ultim lanmou." },
+    "soleil-tropical": { name: "Solèy Tropikal", description: "Bouke vibran ak flè solèy, wòz ak alstroemeria nan yon anbalaj wouj « Love » — eklèsi garanti." },
+    "edition-luxe": { name: "Edisyon Liks", description: "Bouke ki vlope nan yon anbalaj liks monogram nwa ak nœud siyati, pou gwo okazyon." },
+    "money-bouquet": { name: "Pak Selebrasyon Lajan", description: "Konpozisyon orijinal ak biyè ki pliye an petal stil dahlia, dekore ak yon papiyon an lò — yon pak selebrasyon mizikal ki chik epi sipriz." },
+  },
+  categories: {
+    "Saint-Valentin": "Sen Valanten",
+    "Anniversaire": "Anivèsè",
+    "Mariage": "Maryaj",
+    "Fête des Mères": "Fèt Manman",
+    "Événement": "Evènman",
+    "Pack Célébration": "Pak Selebrasyon",
+  },
 };

@@ -9,9 +9,17 @@ export function BouquetCard({ bouquet }: { bouquet: Bouquet }) {
   const { addItem } = useCart();
   const { t } = useTranslation();
 
+  // Traduction dynamique : on tente la clé i18n par id, sinon on garde la valeur d'origine.
+  // Cela couvre aussi bien les bouquets statiques que ceux issus de la BDD (fallback gracieux).
+  const localizedName = t(`bouquets.${bouquet.id}.name`, { defaultValue: bouquet.name });
+  const localizedDescription = t(`bouquets.${bouquet.id}.description`, { defaultValue: bouquet.description });
+  const localizedCategory = bouquet.category
+    ? t(`categories.${bouquet.category}`, { defaultValue: bouquet.category })
+    : null;
+
   const handleAdd = () => {
     addItem(bouquet);
-    toast.success(t("common.addedToCart", { name: bouquet.name }));
+    toast.success(t("common.addedToCart", { name: localizedName }));
   };
 
   const isPack = bouquet.category === "Pack Célébration";
@@ -33,15 +41,17 @@ export function BouquetCard({ bouquet }: { bouquet: Bouquet }) {
             <Music className="h-4 w-4" />
           </div>
         )}
-        <div className="absolute top-3 left-3">
-          <span className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-background/90 text-primary backdrop-blur-sm">
-            {bouquet.category}
-          </span>
-        </div>
+        {localizedCategory && (
+          <div className="absolute top-3 left-3">
+            <span className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-background/90 text-primary backdrop-blur-sm">
+              {localizedCategory}
+            </span>
+          </div>
+        )}
       </div>
       <div className="p-5 flex flex-col gap-3 flex-1">
-        <h3 className="font-display text-xl text-foreground">{bouquet.name}</h3>
-        <p className="text-sm text-muted-foreground flex-1">{bouquet.description}</p>
+        <h3 className="font-display text-xl text-foreground">{localizedName}</h3>
+        <p className="text-sm text-muted-foreground flex-1">{localizedDescription}</p>
         <div className="flex items-center justify-between pt-2">
           <span className="font-display text-lg text-primary font-semibold">
             {formatPrice(bouquet.price)}

@@ -15,9 +15,9 @@ export function Header() {
   const navLinks = [
     { to: "/", label: t("nav.home") },
     { to: "/boutique", label: t("nav.boutique") },
-    { to: "/composez", label: "Composez" },
-    { to: "/abonnements", label: "Abonnements" },
-    { to: "/grands-projets", label: "Grands Projets" },
+    { to: "/composez", label: t("nav.composez") },
+    { to: "/abonnements", label: t("nav.abonnements") },
+    { to: "/grands-projets", label: t("nav.grandsProjets") },
     { to: "/galerie", label: t("nav.galerie") },
     { to: "/coulisses", label: t("nav.coulisses") },
     { to: "/a-propos", label: t("nav.about") },
@@ -26,21 +26,27 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-background/85 border-b border-border">
-      <div className="mx-auto max-w-6xl px-4 flex items-center justify-between h-24">
-        <Link to="/" className="flex items-center gap-3 group" onClick={() => setOpen(false)}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 flex items-center justify-between gap-4 h-24">
+        {/* Logo (taille réduite pour ne plus chevaucher) */}
+        <Link
+          to="/"
+          className="flex items-center gap-3 group shrink-0"
+          onClick={() => setOpen(false)}
+        >
           <img
             src={logo}
             alt="Logo Samayoo Flowers"
-            width={80}
-            height={80}
-            className="h-16 w-16 sm:h-20 sm:w-20 object-contain transition-transform group-hover:scale-110"
+            width={64}
+            height={64}
+            className="h-12 w-12 sm:h-14 sm:w-14 object-contain transition-transform group-hover:scale-110"
           />
-          <span className="font-display text-xl tracking-[0.18em] text-primary font-semibold hidden sm:inline">
+          <span className="font-display text-base xl:text-lg tracking-[0.18em] text-primary font-semibold hidden sm:inline whitespace-nowrap">
             SAMAYOO FLOWERS
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-5 lg:gap-7">
+        {/* Nav desktop : visible seulement à partir de xl pour éviter la saturation */}
+        <nav className="hidden xl:flex items-center gap-5 flex-1 justify-center">
           {navLinks.map((link) => (
             <Link
               key={link.to}
@@ -57,7 +63,8 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        {/* Actions à droite — espacées du nav par ml-8 */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0 xl:ml-8">
           <Link
             to="/panier"
             className="relative p-2.5 rounded-full hover:bg-secondary transition-colors group"
@@ -72,27 +79,30 @@ export function Header() {
           </Link>
           <ThemeToggle />
           <LanguageSwitcher />
+          {/* Burger : visible jusqu'à xl (couvre mobile + tablette + laptop standard) */}
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="md:hidden p-2.5 rounded-full hover:bg-secondary"
+            className="xl:hidden p-2.5 rounded-full text-accent hover:bg-secondary border border-accent/40"
             aria-label={t("nav.menu")}
+            style={{ color: "#D4AF37" }}
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
+      {/* Menu burger (mobile + tablette + laptop) */}
       {open && (
-        <nav className="md:hidden border-t border-border bg-background animate-fade-in">
-          <div className="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-1">
+        <nav className="xl:hidden border-t border-accent/30 bg-background animate-fade-in">
+          <div className="mx-auto max-w-7xl px-4 py-3 flex flex-col gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
                 activeOptions={{ exact: link.to === "/" }}
                 onClick={() => setOpen(false)}
-                className="px-3 py-2.5 rounded-md text-sm font-medium hover:bg-secondary"
+                className="px-3 py-2.5 rounded-md text-sm font-medium text-foreground hover:bg-secondary"
                 activeProps={{
                   className:
                     "px-3 py-2.5 rounded-md text-sm font-semibold text-primary bg-secondary/80 ring-1 ring-accent/60",

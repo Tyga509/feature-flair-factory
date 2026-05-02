@@ -45,19 +45,19 @@ function ContactPage() {
         </header>
 
         <div className="grid gap-10 lg:grid-cols-2">
-          <div className="bg-gradient-romantic rounded-3xl p-8 shadow-soft">
-            <h2 className="font-display text-2xl text-foreground mb-6">{t("contact.coordinates")}</h2>
-            <ul className="space-y-4 text-foreground/85">
-              <li className="flex items-start gap-3"><Phone className="h-5 w-5 text-primary mt-0.5" /> <a href="https://wa.me/50955017732?text=Salut%20Samayoo%20Flowers%2C%20Je%20voudrais%20avoir%20plus%20d%27informations%20sur%20vos%20produits%20svp..." target="_blank" rel="noopener noreferrer" className="story-link">+509 55 01 77 32</a></li>
-              <li className="flex items-start gap-3"><Mail className="h-5 w-5 text-primary mt-0.5" /> <a href="mailto:samaraben10icloud.com" className="story-link">samaraben10icloud.com</a></li>
-              <li className="flex items-start gap-3"><MapPin className="h-5 w-5 text-primary mt-0.5" /> Port-au-Prince, Haïti</li>
-              <li className="flex items-start gap-3"><Facebook className="h-5 w-5 text-primary mt-0.5" /> <a href="https://www.facebook.com/profile.php?id=61571305557097" target="_blank" rel="noopener noreferrer" className="story-link">Samayoo Flowers</a></li>
-              <li className="flex items-start gap-3"><Music2 className="h-5 w-5 text-primary mt-0.5" /> <a href="https://www.tiktok.com/@samayoo01?_r=1&_t=ZS-95kygrqkeeH" target="_blank" rel="noopener noreferrer" className="story-link">TikTok : @Samayoo01</a></li>
+          <div className="bg-gradient-romantic rounded-3xl p-8 shadow-soft text-[#4A0404]">
+            <h2 className="font-display text-2xl text-[#4A0404] mb-6">{t("contact.coordinates")}</h2>
+            <ul className="space-y-4 text-[#4A0404]/90">
+              <li className="flex items-start gap-3"><Phone className="h-5 w-5 text-[#4A0404] mt-0.5" /> <a href="https://wa.me/50955017732?text=Salut%20Samayoo%20Flowers%2C%20Je%20voudrais%20avoir%20plus%20d%27informations%20sur%20vos%20produits%20svp..." target="_blank" rel="noopener noreferrer" className="story-link text-[#4A0404] hover:text-[#4A0404]/80">+509 55 01 77 32</a></li>
+              <li className="flex items-start gap-3"><Mail className="h-5 w-5 text-[#4A0404] mt-0.5" /> <a href="mailto:samaraben10icloud.com" className="story-link text-[#4A0404] hover:text-[#4A0404]/80">samaraben10icloud.com</a></li>
+              <li className="flex items-start gap-3"><MapPin className="h-5 w-5 text-[#4A0404] mt-0.5" /> Port-au-Prince, Haïti</li>
+              <li className="flex items-start gap-3"><Facebook className="h-5 w-5 text-[#4A0404] mt-0.5" /> <a href="https://www.facebook.com/profile.php?id=61571305557097" target="_blank" rel="noopener noreferrer" className="story-link text-[#4A0404] hover:text-[#4A0404]/80">Samayoo Flowers</a></li>
+              <li className="flex items-start gap-3"><Music2 className="h-5 w-5 text-[#4A0404] mt-0.5" /> <a href="https://www.tiktok.com/@samayoo01?_r=1&_t=ZS-95kygrqkeeH" target="_blank" rel="noopener noreferrer" className="story-link text-[#4A0404] hover:text-[#4A0404]/80">TikTok : @Samayoo01</a></li>
             </ul>
-            <div className="mt-8 p-4 bg-card/70 rounded-xl border border-border">
-              <p className="font-display text-lg text-primary">{t("contact.hours")}</p>
-              <p className="text-sm text-muted-foreground mt-1">{t("contact.hoursWeek")}</p>
-              <p className="text-sm text-muted-foreground">{t("contact.hoursSunday")}</p>
+            <div className="mt-8 p-4 bg-white/70 rounded-xl border border-[#4A0404]/20">
+              <p className="font-display text-lg text-[#4A0404] font-semibold">{t("contact.hours")}</p>
+              <p className="text-sm text-[#4A0404]/75 mt-1">{t("contact.hoursWeek")}</p>
+              <p className="text-sm text-[#4A0404]/75">{t("contact.hoursSunday")}</p>
             </div>
           </div>
 

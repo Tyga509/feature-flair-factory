@@ -31,10 +31,11 @@ export function Footer() {
           <h4 className="font-display text-base mb-3 text-foreground">{t("footer.navigation")}</h4>
           <ul className="space-y-2 text-sm">
             <li><Link to="/boutique" className="story-link text-muted-foreground hover:text-primary">{t("nav.boutique")}</Link></li>
-            <li><Link to="/composez" className="story-link text-muted-foreground hover:text-primary">Composez</Link></li>
-            <li><Link to="/abonnements" className="story-link text-muted-foreground hover:text-primary">Abonnements</Link></li>
-            <li><Link to="/grands-projets" className="story-link text-muted-foreground hover:text-primary">Grands Projets</Link></li>
+            <li><Link to="/composez" className="story-link text-muted-foreground hover:text-primary">{t("nav.composez")}</Link></li>
+            <li><Link to="/abonnements" className="story-link text-muted-foreground hover:text-primary">{t("nav.abonnements")}</Link></li>
+            <li><Link to="/grands-projets" className="story-link text-muted-foreground hover:text-primary">{t("nav.grandsProjets")}</Link></li>
             <li><Link to="/galerie" className="story-link text-muted-foreground hover:text-primary">{t("nav.galerie")}</Link></li>
+            <li><Link to="/coulisses" className="story-link text-muted-foreground hover:text-primary">{t("nav.coulisses")}</Link></li>
             <li><Link to="/a-propos" className="story-link text-muted-foreground hover:text-primary">{t("nav.about")}</Link></li>
             <li><Link to="/contact" className="story-link text-muted-foreground hover:text-primary">{t("nav.contact")}</Link></li>
           </ul>

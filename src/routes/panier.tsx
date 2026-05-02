@@ -115,32 +115,32 @@ function PanierPage() {
               <h2 className="font-display text-2xl mb-6">{t("cart.summary")}</h2>
               
               <div className="space-y-4 mb-6">
-                <input type="text" placeholder="Nom complet" className="w-full p-3 rounded-xl border bg-white/50 text-sm outline-none focus:ring-2 focus:ring-primary" value={customerInfo.fullName} onChange={(e) => setCustomerInfo({...customerInfo, fullName: e.target.value})} />
-                <input type="email" placeholder="Email" className="w-full p-3 rounded-xl border bg-white/50 text-sm outline-none focus:ring-2 focus:ring-primary" value={customerInfo.email} onChange={(e) => setCustomerInfo({...customerInfo, email: e.target.value})} />
-                <input type="tel" placeholder="WhatsApp" className="w-full p-3 rounded-xl border bg-white/50 text-sm outline-none focus:ring-2 focus:ring-primary" value={customerInfo.phone} onChange={(e) => setCustomerInfo({...customerInfo, phone: e.target.value})} />
-                <textarea placeholder="Adresse de livraison" className="w-full p-3 rounded-xl border bg-white/50 text-sm outline-none focus:ring-2 focus:ring-primary" rows={2} value={customerInfo.address} onChange={(e) => setCustomerInfo({...customerInfo, address: e.target.value})} />
+                <input type="text" placeholder="Nom complet" className="w-full p-3 rounded-xl border border-border bg-background/70 text-foreground placeholder:text-muted-foreground text-sm outline-none focus:ring-2 focus:ring-primary" value={customerInfo.fullName} onChange={(e) => setCustomerInfo({...customerInfo, fullName: e.target.value})} />
+                <input type="email" placeholder="Email" className="w-full p-3 rounded-xl border border-border bg-background/70 text-foreground placeholder:text-muted-foreground text-sm outline-none focus:ring-2 focus:ring-primary" value={customerInfo.email} onChange={(e) => setCustomerInfo({...customerInfo, email: e.target.value})} />
+                <input type="tel" placeholder="WhatsApp" className="w-full p-3 rounded-xl border border-border bg-background/70 text-foreground placeholder:text-muted-foreground text-sm outline-none focus:ring-2 focus:ring-primary" value={customerInfo.phone} onChange={(e) => setCustomerInfo({...customerInfo, phone: e.target.value})} />
+                <textarea placeholder="Adresse de livraison" className="w-full p-3 rounded-xl border border-border bg-background/70 text-foreground placeholder:text-muted-foreground text-sm outline-none focus:ring-2 focus:ring-primary" rows={2} value={customerInfo.address} onChange={(e) => setCustomerInfo({...customerInfo, address: e.target.value})} />
 
                 <div className="grid grid-cols-1 gap-2 pt-2">
-                  <label className={`flex items-center justify-between p-3 rounded-xl border-2 cursor-pointer transition-all ${customerInfo.wantsDedicace ? 'border-primary bg-primary/5' : 'border-border bg-white/30'}`}>
+                  <label className={`flex items-center justify-between p-3 rounded-xl border-2 cursor-pointer transition-all ${customerInfo.wantsDedicace ? 'border-primary bg-primary/5' : 'border-border bg-background/40'}`}>
                     <div className="flex items-center gap-3">
-                      <Gift size={18} className={customerInfo.wantsDedicace ? 'text-primary' : 'text-gray-400'} />
-                      <span className="text-xs font-medium">Dédicace (+1,000 GDES)</span>
+                      <Gift size={18} className={customerInfo.wantsDedicace ? 'text-primary' : 'text-muted-foreground'} />
+                      <span className="text-xs font-medium text-foreground">Dédicace (+1,000 GDES)</span>
                     </div>
                     <input type="checkbox" className="hidden" checked={customerInfo.wantsDedicace} onChange={(e) => setCustomerInfo({...customerInfo, wantsDedicace: e.target.checked})} />
                     {customerInfo.wantsDedicace && <Check size={16} className="text-primary" />}
                   </label>
 
-                  <label className={`flex items-center justify-between p-3 rounded-xl border-2 cursor-pointer transition-all ${customerInfo.wantsLivraison ? 'border-primary bg-primary/5' : 'border-border bg-white/30'}`}>
+                  <label className={`flex items-center justify-between p-3 rounded-xl border-2 cursor-pointer transition-all ${customerInfo.wantsLivraison ? 'border-primary bg-primary/5' : 'border-border bg-background/40'}`}>
                     <div className="flex items-center gap-3">
-                      <Truck size={18} className={customerInfo.wantsLivraison ? 'text-primary' : 'text-gray-400'} />
-                      <span className="text-xs font-medium">Livraison (+1,000 GDES)</span>
+                      <Truck size={18} className={customerInfo.wantsLivraison ? 'text-primary' : 'text-muted-foreground'} />
+                      <span className="text-xs font-medium text-foreground">Livraison (+1,000 GDES)</span>
                     </div>
                     <input type="checkbox" className="hidden" checked={customerInfo.wantsLivraison} onChange={(e) => setCustomerInfo({...customerInfo, wantsLivraison: e.target.checked})} />
                     {customerInfo.wantsLivraison && <Check size={16} className="text-primary" />}
                   </label>
                 </div>
 
-                <select className="w-full p-3 rounded-xl border bg-white/50 text-sm outline-none focus:ring-2 focus:ring-primary" value={customerInfo.paymentMethod} onChange={(e) => setCustomerInfo({...customerInfo, paymentMethod: e.target.value})}>
+                <select className="w-full p-3 rounded-xl border border-border bg-background/70 text-foreground text-sm outline-none focus:ring-2 focus:ring-primary" value={customerInfo.paymentMethod} onChange={(e) => setCustomerInfo({...customerInfo, paymentMethod: e.target.value})}>
                   <option value="MonCash">MonCash</option>
                   <option value="Natcash">Natcash</option>
                   <option value="Unibank Online">Unibank Online</option>
@@ -148,18 +148,18 @@ function PanierPage() {
 
                 {/* MESSAGE SUR LES FRAIS DE RETRAIT (DYNAMIQUE) */}
                 {(customerInfo.paymentMethod === "MonCash" || customerInfo.paymentMethod === "Natcash") && (
-                  <div className="flex gap-2 p-3 bg-amber-50 border border-amber-200 rounded-xl animate-in fade-in slide-in-from-top-2">
-                    <AlertCircle className="h-5 w-5 text-amber-600 shrink-0" />
-                    <p className="text-[11px] text-amber-800 leading-tight">
+                  <div className="flex gap-2 p-3 bg-accent/10 border border-accent/40 rounded-xl animate-in fade-in slide-in-from-top-2">
+                    <AlertCircle className="h-5 w-5 text-accent shrink-0" />
+                    <p className="text-[11px] text-foreground leading-tight">
                       <strong>Note :</strong> Les frais de retrait sont à la charge du client. Veuillez inclure le montant des frais lors de votre transfert.
                     </p>
                   </div>
                 )}
 
-                <div className="relative border-2 border-dashed border-gray-200 rounded-xl p-4 text-center bg-white/30">
+                <div className="relative border-2 border-dashed border-border rounded-xl p-4 text-center bg-background/40">
                   <input type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onChange={handleFileChange} />
-                  <Upload size={18} className="mx-auto text-gray-400 mb-1" />
-                  <span className="text-[10px] text-gray-500 block">{customerInfo.paymentProof ? customerInfo.paymentProof.name : "Cliquez pour uploader votre preuve"}</span>
+                  <Upload size={18} className="mx-auto text-muted-foreground mb-1" />
+                  <span className="text-[10px] text-muted-foreground block">{customerInfo.paymentProof ? customerInfo.paymentProof.name : "Cliquez pour uploader votre preuve"}</span>
                 </div>
               </div>
 

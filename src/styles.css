@@ -145,9 +145,16 @@
   }
   .bg-gradient-romantic {
     background-image: var(--gradient-romantic);
+    /* Fond clair fixe : on force la couleur du texte en bordeaux pour rester lisible
+       quel que soit le thème (light OU dark). */
+    color: #4A0404;
+  }
+  .bg-gradient-romantic .text-muted-foreground {
+    color: rgba(74, 4, 4, 0.7);
   }
   .bg-gradient-gold {
     background-image: var(--gradient-gold);
+    color: #4A0404;
   }
   .shadow-soft {
     box-shadow: var(--shadow-soft);

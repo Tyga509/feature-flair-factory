@@ -13,15 +13,15 @@ export function Header() {
   const { t } = useTranslation();
 
   const navLinks = [
-    { to: "/", label: t("nav.home") },
-    { to: "/boutique", label: t("nav.boutique") },
-    { to: "/composez", label: t("nav.composez") },
-    { to: "/abonnements", label: t("nav.abonnements") },
-    { to: "/grands-projets", label: t("nav.grandsProjets") },
-    { to: "/galerie", label: t("nav.galerie") },
-    { to: "/coulisses", label: t("nav.coulisses") },
-    { to: "/a-propos", label: t("nav.about") },
-    { to: "/contact", label: t("nav.contact") },
+    { to: "/", label: t("nav.home", { defaultValue: "Accueil" }) },
+    { to: "/boutique", label: t("nav.boutique", { defaultValue: "Boutique" }) },
+    { to: "/composez", label: t("nav.composez", { defaultValue: "Composez" }) },
+    { to: "/abonnements", label: t("nav.abonnements", { defaultValue: "Abonnements" }) },
+    { to: "/grands-projets", label: t("nav.grandsProjets", { defaultValue: "Grands Projets" }) },
+    { to: "/galerie", label: t("nav.galerie", { defaultValue: "Galerie" }) },
+    { to: "/coulisses", label: t("nav.coulisses", { defaultValue: "Coulisses" }) },
+    { to: "/a-propos", label: t("nav.about", { defaultValue: "À propos" }) },
+    { to: "/contact", label: t("nav.contact", { defaultValue: "Contact" }) },
   ] as const;
 
   return (

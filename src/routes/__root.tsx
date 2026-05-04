@@ -6,6 +6,7 @@ import { CartProvider } from "@/context/CartContext";
 import { Toaster } from "@/components/ui/sonner";
 
 import { Preloader } from "@/components/Preloader";
+import { SamayooBot } from "@/components/SamayooBot";
 import "@/i18n";
 
 import appCss from "../styles.css?url";
@@ -87,6 +88,7 @@ function RootComponent() {
             <Outlet />
           </main>
           <Footer />
+          <SamayooBot />
           <Toaster position="top-center" richColors />
         </div>
       </CartProvider>

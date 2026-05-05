@@ -149,7 +149,23 @@
        quel que soit le thème (light OU dark). */
     color: #4A0404;
   }
-  .bg-gradient-romantic .text-muted-foreground {
+  /* Le forçage bordeaux ne s'applique qu'au texte direct de la section
+     (titres, intros). À l'intérieur des cartes, on rétablit les tokens du thème
+     pour rester lisible en dark mode. */
+  .bg-gradient-romantic .bg-card,
+  .bg-gradient-romantic .bg-card * {
+    color: revert;
+  }
+  .bg-gradient-romantic .bg-card .text-foreground {
+    color: var(--color-foreground);
+  }
+  .bg-gradient-romantic .bg-card .text-muted-foreground {
+    color: var(--color-muted-foreground);
+  }
+  .bg-gradient-romantic .bg-card .text-primary {
+    color: var(--color-primary);
+  }
+  .bg-gradient-romantic > :not(.bg-card) .text-muted-foreground {
     color: rgba(74, 4, 4, 0.7);
   }
   .bg-gradient-gold {

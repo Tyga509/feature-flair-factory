@@ -33,6 +33,31 @@ const smartMap: { keywords: RegExp; category: BouquetCategory }[] = [
 function BoutiquePage() {
   const [activeCat, setActiveCat] = useState<"Tous" | BouquetCategory>("Tous");
   const [search, setSearch] = useState("");
+  const [remoteProducts, setRemoteProducts] = useState<Bouquet[]>([]);
+
+  // Charge dynamiquement les produits depuis Supabase et les fusionne avec les bouquets locaux
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const { data, error } = await supabase
+        .from("products" as any)
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false });
+      if (error || !mounted || !data) return;
+      const mapped: Bouquet[] = (data as any[]).map((r) => ({
+        id: r.id,
+        name: r.name,
+        description: r.description ?? "",
+        price: Number(r.price ?? 0),
+        image: r.image_url ?? "",
+        alt: r.name,
+        category: r.category as BouquetCategory | undefined,
+      }));
+      setRemoteProducts(mapped);
+    })();
+    return () => { mounted = false; };
+  }, []);
 
   // Smart filter activation
   useEffect(() => {

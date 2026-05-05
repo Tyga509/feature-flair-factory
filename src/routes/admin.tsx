@@ -24,13 +24,9 @@ type TabId =
   | 'galerie' | 'coulisses'
   | 'custom_requests' | 'subscriptions' | 'contracts'
 
-const localOnlyTabs: TabId[] = ['boutique', 'artisanat', 'commandes', 'clients', 'coulisses']
+const localOnlyTabs: TabId[] = ['artisanat', 'commandes', 'clients', 'coulisses']
 
 const initialLocal: Record<string, ItemRow[]> = {
-  boutique: [
-    { id: 'b1', name: 'Bouquet Romance', details: '12 000 HTG · Saint-Valentin' },
-    { id: 'b2', name: 'Édition Luxe', details: '25 000 HTG · Mariage' },
-  ],
   artisanat: [
     { id: 'a1', name: 'Mug Drapeau Haïti', details: '1 800 HTG · Stock 8' },
   ],
@@ -52,6 +48,10 @@ const galleryCategories = [
   'Fleurs Éternelles',
 ]
 
+const productCategories = [
+  'Saint-Valentin', 'Anniversaire', 'Mariage', 'Fête des Mères', 'Événement', 'Pack Célébration',
+]
+
 function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [activeTab, setActiveTab] = useState<TabId>('boutique')
@@ -61,7 +61,7 @@ function AdminPage() {
 
   const [localData, setLocalData] = useState<Record<string, ItemRow[]>>(initialLocal)
   const [remoteData, setRemoteData] = useState<Record<string, ItemRow[]>>({
-    galerie: [], custom_requests: [], subscriptions: [], contracts: []
+    boutique: [], galerie: [], custom_requests: [], subscriptions: [], contracts: []
   })
 
   const [search, setSearch] = useState<Record<string, string>>({})
@@ -69,10 +69,17 @@ function AdminPage() {
   const [editName, setEditName] = useState('')
   const [editDetails, setEditDetails] = useState('')
 
-  // Form state
+  // Form state — galerie
   const [galTitle, setGalTitle] = useState('')
   const [galCat, setGalCat] = useState(galleryCategories[0])
   const [galUrl, setGalUrl] = useState('')
+
+  // Form state — produits
+  const [pName, setPName] = useState('')
+  const [pPrice, setPPrice] = useState<string>('')
+  const [pCat, setPCat] = useState(productCategories[0])
+  const [pDesc, setPDesc] = useState('')
+  const [pImg, setPImg] = useState('')
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
@@ -84,13 +91,18 @@ function AdminPage() {
   }
 
   const loadRemote = useCallback(async () => {
-    const [g, c, s, ct] = await Promise.all([
+    const [p, g, c, s, ct] = await Promise.all([
+      supabase.from('products' as any).select('*').order('created_at', { ascending: false }),
       supabase.from('gallery_items').select('*').order('created_at', { ascending: false }),
       supabase.from('custom_requests').select('*').order('created_at', { ascending: false }),
       supabase.from('subscriptions').select('*').order('created_at', { ascending: false }),
       supabase.from('contracts').select('*').order('created_at', { ascending: false }),
     ])
     setRemoteData({
+      boutique: (p.data ?? []).map((r: any) => ({
+        id: r.id, name: r.name,
+        details: `${Number(r.price).toLocaleString('fr-FR')} HTG · ${r.category ?? '—'} · Stock ${r.stock ?? 0}`
+      })),
       galerie: (g.data ?? []).map((r: any) => ({
         id: r.id, name: r.title, details: `${r.category}${r.description ? ' · ' + r.description : ''}`
       })),
@@ -180,6 +192,7 @@ function AdminPage() {
   })
 
   const tableMap: Partial<Record<TabId, string>> = {
+    boutique: 'products',
     galerie: 'gallery_items',
     custom_requests: 'custom_requests',
     subscriptions: 'subscriptions',
@@ -190,13 +203,14 @@ function AdminPage() {
     if (!confirm('Supprimer cet élément ?')) return
     if (isLocal) {
       setLocalData(prev => ({ ...prev, [activeTab]: prev[activeTab].filter(r => r.id !== id) }))
+      toast.success('Supprimé')
       return
     }
     const table = tableMap[activeTab]
     if (!table) return
     const { error } = await supabase.from(table as any).delete().eq('id', id)
-    if (error) return toast.error(error.message)
-    toast.success('Supprimé')
+    if (error) return toast.error('Erreur : ' + error.message)
+    toast.success('Produit supprimé avec succès')
     loadRemote()
   }
 
@@ -212,19 +226,20 @@ function AdminPage() {
         [activeTab]: prev[activeTab].map(r => r.id === editingId ? { ...r, name: editName, details: editDetails } : r)
       }))
       setEditingId(null)
+      toast.success('Mis à jour')
       return
     }
-    // For remote rows, update notes/status field flexibly
     const table = tableMap[activeTab]
     if (!table) return
     let updates: any = {}
+    if (activeTab === 'boutique') updates = { name: editName, description: editDetails }
     if (activeTab === 'galerie') updates = { title: editName, description: editDetails }
     if (activeTab === 'custom_requests') updates = { full_name: editName, notes: editDetails }
     if (activeTab === 'subscriptions') updates = { full_name: editName, notes: editDetails }
     if (activeTab === 'contracts') updates = { client_name: editName, description: editDetails }
     const { error } = await supabase.from(table as any).update(updates).eq('id', editingId)
-    if (error) return toast.error(error.message)
-    toast.success('Mis à jour')
+    if (error) return toast.error('Erreur : ' + error.message)
+    toast.success('Mis à jour avec succès')
     setEditingId(null)
     loadRemote()
   }
@@ -235,14 +250,31 @@ function AdminPage() {
     const { error } = await supabase.from('gallery_items').insert({
       title: galTitle, category: galCat, image_url: galUrl
     })
-    if (error) return toast.error(error.message)
+    if (error) return toast.error('Erreur : ' + error.message)
     toast.success('Image ajoutée à la galerie')
     setGalTitle(''); setGalUrl('')
     loadRemote()
   }
 
+  const handleAddProduct = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!pName || !pPrice) return toast.error('Nom et prix requis')
+    const { error } = await supabase.from('products' as any).insert({
+      name: pName,
+      price: Number(pPrice),
+      category: pCat,
+      description: pDesc || null,
+      image_url: pImg || null,
+    })
+    if (error) return toast.error('Erreur : ' + error.message)
+    toast.success('Produit ajouté avec succès')
+    setPName(''); setPPrice(''); setPDesc(''); setPImg('')
+    loadRemote()
+  }
+
   const formTitle =
-    activeTab === 'commandes' ? 'Nouvelle Commande'
+    activeTab === 'boutique' ? 'Nouveau Produit'
+    : activeTab === 'commandes' ? 'Nouvelle Commande'
     : activeTab === 'clients' ? 'Nouveau Client'
     : activeTab === 'galerie' ? 'Ajouter une image à la Galerie'
     : activeTab === 'coulisses' ? 'Ajouter une vidéo'
@@ -284,7 +316,7 @@ function AdminPage() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
             <input type="text" value={currentSearch}
               onChange={(e) => setSearch(prev => ({ ...prev, [activeTab]: e.target.value }))}
-              placeholder={`Rechercher dans ${tabs.find(t => t.id === activeTab)?.label}...`}
+              placeholder={`Rechercher dans ${tabs.find(t => t.id === activeTab)?.label}... (nom ou catégorie)`}
               className="w-full pl-12 pr-4 py-3 rounded-xl border border-border bg-background outline-none focus:ring-2 focus:ring-primary" />
           </div>
         </div>
@@ -295,7 +327,25 @@ function AdminPage() {
               <Plus className="text-accent" size={22} /> {formTitle}
             </h2>
 
-            {activeTab === 'galerie' ? (
+            {activeTab === 'boutique' ? (
+              <form className="space-y-3" onSubmit={handleAddProduct}>
+                <input value={pName} onChange={(e) => setPName(e.target.value)}
+                  placeholder="Nom du produit" className="w-full border border-border bg-background p-3 rounded-lg" />
+                <input type="number" value={pPrice} onChange={(e) => setPPrice(e.target.value)}
+                  placeholder="Prix (HTG)" className="w-full border border-border bg-background p-3 rounded-lg" />
+                <select value={pCat} onChange={(e) => setPCat(e.target.value)}
+                  className="w-full border border-border bg-background p-3 rounded-lg">
+                  {productCategories.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+                <textarea value={pDesc} onChange={(e) => setPDesc(e.target.value)}
+                  placeholder="Description" rows={3} className="w-full border border-border bg-background p-3 rounded-lg" />
+                <input value={pImg} onChange={(e) => setPImg(e.target.value)}
+                  placeholder="URL de l'image (https://...)" className="w-full border border-border bg-background p-3 rounded-lg" />
+                <button type="submit" className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold hover:opacity-90 transition-all">
+                  Ajouter le produit
+                </button>
+              </form>
+            ) : activeTab === 'galerie' ? (
               <form className="space-y-3" onSubmit={handleAddGallery}>
                 <input value={galTitle} onChange={(e) => setGalTitle(e.target.value)}
                   placeholder="Titre" className="w-full border border-border bg-background p-3 rounded-lg" />
@@ -309,12 +359,11 @@ function AdminPage() {
                   Publier dans la Galerie
                 </button>
               </form>
-            ) : (activeTab === 'boutique' || activeTab === 'artisanat') ? (
+            ) : activeTab === 'artisanat' ? (
               <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
                 <input type="text" placeholder="Nom" className="w-full border border-border bg-background p-3 rounded-lg" />
                 <input type="number" placeholder="Prix (HTG)" className="w-full border border-border bg-background p-3 rounded-lg" />
                 <textarea placeholder="Description" className="w-full border border-border bg-background p-3 rounded-lg" rows={3} />
-                <input type="file" className="w-full text-sm text-muted-foreground" />
                 <button type="submit" className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold">
                   Enregistrer (local)
                 </button>

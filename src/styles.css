@@ -145,9 +145,27 @@
   }
   .bg-gradient-romantic {
     background-image: var(--gradient-romantic);
-    /* Fond clair fixe : on force la couleur du texte en bordeaux pour rester lisible
-       quel que soit le thème (light OU dark). */
     color: #4A0404;
+  }
+  /* Dark mode : la section reste sur fond clair (gradient romantic).
+     On garde le bordeaux pour les titres/intros, mais on force un gris doux
+     pour les descriptions des cartes afin d'éviter un rouge illisible. */
+  .dark .bg-gradient-romantic .bg-card {
+    background-color: #1f2937; /* slate-800 */
+    border-color: rgba(212, 175, 55, 0.25);
+  }
+  .dark .bg-gradient-romantic .bg-card .text-foreground,
+  .dark .bg-gradient-romantic .bg-card h1,
+  .dark .bg-gradient-romantic .bg-card h2,
+  .dark .bg-gradient-romantic .bg-card h3 {
+    color: #f1f5f9; /* slate-100 */
+  }
+  .dark .bg-gradient-romantic .bg-card .text-muted-foreground,
+  .dark .bg-gradient-romantic .bg-card p {
+    color: #e2e8f0; /* slate-200 */
+  }
+  .dark .bg-gradient-romantic .bg-card .text-primary {
+    color: #D4AF37; /* or */
   }
   /* Le forçage bordeaux ne s'applique qu'au texte direct de la section
      (titres, intros). À l'intérieur des cartes, on rétablit les tokens du thème

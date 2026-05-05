@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { BouquetCard } from "@/components/BouquetCard";
-import { bouquets, type BouquetCategory } from "@/data/bouquets";
+import { bouquets, type BouquetCategory, type Bouquet } from "@/data/bouquets";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/boutique")({
   head: () => ({
@@ -32,6 +33,31 @@ const smartMap: { keywords: RegExp; category: BouquetCategory }[] = [
 function BoutiquePage() {
   const [activeCat, setActiveCat] = useState<"Tous" | BouquetCategory>("Tous");
   const [search, setSearch] = useState("");
+  const [remoteProducts, setRemoteProducts] = useState<Bouquet[]>([]);
+
+  // Charge dynamiquement les produits depuis Supabase et les fusionne avec les bouquets locaux
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const { data, error } = await supabase
+        .from("products" as any)
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false });
+      if (error || !mounted || !data) return;
+      const mapped: Bouquet[] = (data as any[]).map((r) => ({
+        id: r.id,
+        name: r.name,
+        description: r.description ?? "",
+        price: Number(r.price ?? 0),
+        image: r.image_url ?? "",
+        alt: r.name,
+        category: r.category as BouquetCategory | undefined,
+      }));
+      setRemoteProducts(mapped);
+    })();
+    return () => { mounted = false; };
+  }, []);
 
   // Smart filter activation
   useEffect(() => {
@@ -47,7 +73,8 @@ function BoutiquePage() {
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
-    return bouquets.filter((b) => {
+    const all = [...remoteProducts, ...bouquets];
+    return all.filter((b) => {
       if (activeCat !== "Tous" && b.category !== activeCat) return false;
       if (!q) return true;
       return (
@@ -56,7 +83,7 @@ function BoutiquePage() {
         (b.category ?? "").toLowerCase().includes(q)
       );
     });
-  }, [activeCat, search]);
+  }, [activeCat, search, remoteProducts]);
 
   return (
     <div className="px-4 py-16">

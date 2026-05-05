@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { BouquetCard } from "@/components/BouquetCard";
-import { bouquets, type BouquetCategory } from "@/data/bouquets";
+import { bouquets, type BouquetCategory, type Bouquet } from "@/data/bouquets";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/boutique")({
   head: () => ({

@@ -73,7 +73,8 @@ function BoutiquePage() {
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
-    return bouquets.filter((b) => {
+    const all = [...remoteProducts, ...bouquets];
+    return all.filter((b) => {
       if (activeCat !== "Tous" && b.category !== activeCat) return false;
       if (!q) return true;
       return (
@@ -82,7 +83,7 @@ function BoutiquePage() {
         (b.category ?? "").toLowerCase().includes(q)
       );
     });
-  }, [activeCat, search]);
+  }, [activeCat, search, remoteProducts]);
 
   return (
     <div className="px-4 py-16">

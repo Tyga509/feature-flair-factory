@@ -1,7 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Navigate } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
-// Page Artisanat fusionnée dans /boutique?cat=Artisanat — redirige.
+// Page Artisanat fusionnée dans /boutique — redirige proprement.
 export const Route = createFileRoute("/artisanat")({
-  component: () => <Navigate to="/boutique" replace />,
+  beforeLoad: () => {
+    throw redirect({ to: "/boutique" });
+  },
+  component: () => null,
 });

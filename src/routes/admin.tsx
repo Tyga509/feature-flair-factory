@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
+import { ImageUpload } from '@/components/ImageUpload'
 
 export const Route = createFileRoute('/admin')({
   component: AdminPage,
@@ -24,12 +25,9 @@ type TabId =
   | 'galerie' | 'coulisses'
   | 'custom_requests' | 'subscriptions' | 'contracts'
 
-const localOnlyTabs: TabId[] = ['artisanat', 'commandes', 'clients', 'coulisses']
+const localOnlyTabs: TabId[] = ['commandes', 'clients', 'coulisses']
 
 const initialLocal: Record<string, ItemRow[]> = {
-  artisanat: [
-    { id: 'a1', name: 'Mug Drapeau Haïti', details: '1 800 HTG · Stock 8' },
-  ],
   commandes: [
     { id: 'c1', name: 'SAM-20260424-AB12', details: 'Marie L. · 3500 HTG · En attente' },
   ],
@@ -52,6 +50,8 @@ const productCategories = [
   'Saint-Valentin', 'Anniversaire', 'Mariage', 'Fête des Mères', 'Événement', 'Pack Célébration',
 ]
 
+const artisanatCategories = ['Mug', 'Accessoire', 'Décoration', 'Souvenir', 'Autre']
+
 function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [activeTab, setActiveTab] = useState<TabId>('boutique')
@@ -61,7 +61,7 @@ function AdminPage() {
 
   const [localData, setLocalData] = useState<Record<string, ItemRow[]>>(initialLocal)
   const [remoteData, setRemoteData] = useState<Record<string, ItemRow[]>>({
-    boutique: [], galerie: [], custom_requests: [], subscriptions: [], contracts: []
+    boutique: [], artisanat: [], galerie: [], custom_requests: [], subscriptions: [], contracts: []
   })
 
   const [search, setSearch] = useState<Record<string, string>>({})
@@ -81,6 +81,13 @@ function AdminPage() {
   const [pDesc, setPDesc] = useState('')
   const [pImg, setPImg] = useState('')
 
+  // Form state — artisanat
+  const [aName, setAName] = useState('')
+  const [aPrice, setAPrice] = useState<string>('')
+  const [aCat, setACat] = useState(artisanatCategories[0])
+  const [aDesc, setADesc] = useState('')
+  const [aImg, setAImg] = useState('')
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
     if (email === "samarabendieunicavictor@gmail.com" && password === "Samayoo2026") {
@@ -91,8 +98,9 @@ function AdminPage() {
   }
 
   const loadRemote = useCallback(async () => {
-    const [p, g, c, s, ct] = await Promise.all([
+    const [p, a, g, c, s, ct] = await Promise.all([
       supabase.from('products' as any).select('*').order('created_at', { ascending: false }),
+      supabase.from('artisanat' as any).select('*').order('created_at', { ascending: false }),
       supabase.from('gallery_items').select('*').order('created_at', { ascending: false }),
       supabase.from('custom_requests').select('*').order('created_at', { ascending: false }),
       supabase.from('subscriptions').select('*').order('created_at', { ascending: false }),
@@ -100,6 +108,10 @@ function AdminPage() {
     ])
     setRemoteData({
       boutique: (p.data ?? []).map((r: any) => ({
+        id: r.id, name: r.name,
+        details: `${Number(r.price).toLocaleString('fr-FR')} HTG · ${r.category ?? '—'} · Stock ${r.stock ?? 0}`
+      })),
+      artisanat: ((a.data as any[]) ?? []).map((r: any) => ({
         id: r.id, name: r.name,
         details: `${Number(r.price).toLocaleString('fr-FR')} HTG · ${r.category ?? '—'} · Stock ${r.stock ?? 0}`
       })),
@@ -193,6 +205,7 @@ function AdminPage() {
 
   const tableMap: Partial<Record<TabId, string>> = {
     boutique: 'products',
+    artisanat: 'artisanat',
     galerie: 'gallery_items',
     custom_requests: 'custom_requests',
     subscriptions: 'subscriptions',
@@ -233,6 +246,7 @@ function AdminPage() {
     if (!table) return
     let updates: any = {}
     if (activeTab === 'boutique') updates = { name: editName, description: editDetails }
+    if (activeTab === 'artisanat') updates = { name: editName, description: editDetails }
     if (activeTab === 'galerie') updates = { title: editName, description: editDetails }
     if (activeTab === 'custom_requests') updates = { full_name: editName, notes: editDetails }
     if (activeTab === 'subscriptions') updates = { full_name: editName, notes: editDetails }
@@ -272,8 +286,25 @@ function AdminPage() {
     loadRemote()
   }
 
+  const handleAddArtisanat = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!aName || !aPrice) return toast.error('Nom et prix requis')
+    const { error } = await supabase.from('artisanat' as any).insert({
+      name: aName,
+      price: Number(aPrice),
+      category: aCat,
+      description: aDesc || null,
+      image_url: aImg || null,
+    })
+    if (error) return toast.error('Erreur : ' + error.message)
+    toast.success('Article artisanat ajouté avec succès')
+    setAName(''); setAPrice(''); setADesc(''); setAImg('')
+    loadRemote()
+  }
+
   const formTitle =
     activeTab === 'boutique' ? 'Nouveau Produit'
+    : activeTab === 'artisanat' ? 'Nouvel Article Artisanat'
     : activeTab === 'commandes' ? 'Nouvelle Commande'
     : activeTab === 'clients' ? 'Nouveau Client'
     : activeTab === 'galerie' ? 'Ajouter une image à la Galerie'
@@ -339,9 +370,8 @@ function AdminPage() {
                 </select>
                 <textarea value={pDesc} onChange={(e) => setPDesc(e.target.value)}
                   placeholder="Description" rows={3} className="w-full border border-border bg-background p-3 rounded-lg" />
-                <input value={pImg} onChange={(e) => setPImg(e.target.value)}
-                  placeholder="URL de l'image (https://...)" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <button type="submit" className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold hover:opacity-90 transition-all">
+                <ImageUpload value={pImg} onChange={setPImg} folder="products" />
+                <button type="submit" className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:opacity-90 transition-all">
                   Ajouter le produit
                 </button>
               </form>
@@ -353,19 +383,26 @@ function AdminPage() {
                   className="w-full border border-border bg-background p-3 rounded-lg">
                   {galleryCategories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
-                <input value={galUrl} onChange={(e) => setGalUrl(e.target.value)}
-                  placeholder="URL de l'image (https://...)" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <button type="submit" className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold hover:opacity-90 transition-all">
+                <ImageUpload value={galUrl} onChange={setGalUrl} folder="gallery" />
+                <button type="submit" className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:opacity-90 transition-all">
                   Publier dans la Galerie
                 </button>
               </form>
             ) : activeTab === 'artisanat' ? (
-              <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
-                <input type="text" placeholder="Nom" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <input type="number" placeholder="Prix (HTG)" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <textarea placeholder="Description" className="w-full border border-border bg-background p-3 rounded-lg" rows={3} />
-                <button type="submit" className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold">
-                  Enregistrer (local)
+              <form className="space-y-3" onSubmit={handleAddArtisanat}>
+                <input value={aName} onChange={(e) => setAName(e.target.value)}
+                  placeholder="Nom de l'article" className="w-full border border-border bg-background p-3 rounded-lg" />
+                <input type="number" value={aPrice} onChange={(e) => setAPrice(e.target.value)}
+                  placeholder="Prix (HTG)" className="w-full border border-border bg-background p-3 rounded-lg" />
+                <select value={aCat} onChange={(e) => setACat(e.target.value)}
+                  className="w-full border border-border bg-background p-3 rounded-lg">
+                  {artisanatCategories.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+                <textarea value={aDesc} onChange={(e) => setADesc(e.target.value)}
+                  placeholder="Description" rows={3} className="w-full border border-border bg-background p-3 rounded-lg" />
+                <ImageUpload value={aImg} onChange={setAImg} folder="artisanat" />
+                <button type="submit" className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:opacity-90 transition-all">
+                  Ajouter l'article
                 </button>
               </form>
             ) : activeTab === 'commandes' ? (

@@ -2,8 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { BouquetCard } from "@/components/BouquetCard";
-import { bouquets, type BouquetCategory, type Bouquet } from "@/data/bouquets";
+import type { BouquetCategory, Bouquet } from "@/data/bouquets";
 import { supabase } from "@/integrations/supabase/client";
+import { resolveProductImage } from "@/data/productImages";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/boutique")({
   head: () => ({
@@ -17,72 +19,69 @@ export const Route = createFileRoute("/boutique")({
   component: BoutiquePage,
 });
 
-const categories: ("Tous" | BouquetCategory | "Artisanat")[] = [
+const categories: ("Tous" | BouquetCategory)[] = [
   "Tous", "Saint-Valentin", "Anniversaire", "Mariage", "Fête des Mères", "Événement", "Pack Célébration", "Artisanat",
 ];
 
-// Smart keyword → category mapping
 const smartMap: { keywords: RegExp; category: BouquetCategory }[] = [
   { keywords: /\b(maman|m[èe]re|mama|fete des m[èe]res|cadeau maman)\b/i, category: "Fête des Mères" },
   { keywords: /\b(saint[- ]?valentin|amour|amoureux|valentin)\b/i, category: "Saint-Valentin" },
   { keywords: /\b(anniversaire|birthday)\b/i, category: "Anniversaire" },
   { keywords: /\b(mariage|wedding|noce|mari[ée])\b/i, category: "Mariage" },
   { keywords: /\b(pack|c[ée]l[ée]bration|musique|music)\b/i, category: "Pack Célébration" },
+  { keywords: /\b(artisanat|mug|pochette|tableau|porte[- ]?cl[ée]s)\b/i, category: "Artisanat" },
 ];
 
 function BoutiquePage() {
-  const [activeCat, setActiveCat] = useState<"Tous" | BouquetCategory | "Artisanat">("Tous");
+  const [activeCat, setActiveCat] = useState<"Tous" | BouquetCategory>("Tous");
   const [search, setSearch] = useState("");
-  const [remoteProducts, setRemoteProducts] = useState<Bouquet[]>([]);
+  const [items, setItems] = useState<Bouquet[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Charge dynamiquement produits + artisanat depuis Supabase
   useEffect(() => {
     let mounted = true;
     (async () => {
-      const [{ data: products }, { data: artisanat }] = await Promise.all([
+      const [{ data: products, error: e1 }, { data: artisanat, error: e2 }] = await Promise.all([
         supabase.from("products" as any).select("*").eq("is_active", true).order("created_at", { ascending: false }),
         supabase.from("artisanat" as any).select("*").eq("is_active", true).order("created_at", { ascending: false }),
       ]);
       if (!mounted) return;
+      if (e1 || e2) toast.error("Erreur de chargement du catalogue");
       const mapProducts: Bouquet[] = ((products as any[]) ?? []).map((r) => ({
         id: r.id,
         name: r.name,
         description: r.description ?? "",
         price: Number(r.price ?? 0),
-        image: r.image_url ?? "",
+        image: resolveProductImage(r.image_url),
         alt: r.name,
         category: r.category as BouquetCategory | undefined,
       }));
       const mapArtisanat: Bouquet[] = ((artisanat as any[]) ?? []).map((r) => ({
-        id: `art-${r.id}`,
+        id: r.id,
         name: r.name,
         description: r.description ?? "",
         price: Number(r.price ?? 0),
-        image: r.image_url ?? "",
+        image: resolveProductImage(r.image_url),
         alt: r.name,
-        category: "Artisanat" as any,
+        category: "Artisanat",
       }));
-      setRemoteProducts([...mapProducts, ...mapArtisanat]);
+      setItems([...mapProducts, ...mapArtisanat]);
+      setLoading(false);
     })();
     return () => { mounted = false; };
   }, []);
 
-  // Smart filter activation
   useEffect(() => {
     const q = search.trim();
     if (!q) return;
     for (const { keywords, category } of smartMap) {
-      if (keywords.test(q)) {
-        setActiveCat(category);
-        return;
-      }
+      if (keywords.test(q)) { setActiveCat(category); return; }
     }
   }, [search]);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
-    const all = [...remoteProducts, ...bouquets];
-    return all.filter((b) => {
+    return items.filter((b) => {
       if (activeCat !== "Tous" && b.category !== activeCat) return false;
       if (!q) return true;
       return (
@@ -91,7 +90,7 @@ function BoutiquePage() {
         (b.category ?? "").toLowerCase().includes(q)
       );
     });
-  }, [activeCat, search, remoteProducts]);
+  }, [activeCat, search, items]);
 
   return (
     <div className="px-4 py-16">
@@ -104,7 +103,6 @@ function BoutiquePage() {
           </p>
         </header>
 
-        {/* Search bar */}
         <div className="max-w-xl mx-auto mb-6">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -117,7 +115,6 @@ function BoutiquePage() {
           </div>
         </div>
 
-        {/* Category filters */}
         <div className="flex flex-wrap justify-center gap-2 mb-10">
           {categories.map((cat) => (
             <button
@@ -135,8 +132,10 @@ function BoutiquePage() {
           ))}
         </div>
 
-        {filtered.length === 0 ? (
-          <p className="text-center text-muted-foreground py-12 italic">Aucun bouquet ne correspond à votre recherche.</p>
+        {loading ? (
+          <p className="text-center text-muted-foreground py-12 italic">Chargement du catalogue…</p>
+        ) : filtered.length === 0 ? (
+          <p className="text-center text-muted-foreground py-12 italic">Aucun produit ne correspond à votre recherche.</p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((b) => (

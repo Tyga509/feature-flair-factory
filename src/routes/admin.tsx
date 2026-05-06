@@ -370,9 +370,8 @@ function AdminPage() {
                 </select>
                 <textarea value={pDesc} onChange={(e) => setPDesc(e.target.value)}
                   placeholder="Description" rows={3} className="w-full border border-border bg-background p-3 rounded-lg" />
-                <input value={pImg} onChange={(e) => setPImg(e.target.value)}
-                  placeholder="URL de l'image (https://...)" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <button type="submit" className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold hover:opacity-90 transition-all">
+                <ImageUpload value={pImg} onChange={setPImg} folder="products" />
+                <button type="submit" className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:opacity-90 transition-all">
                   Ajouter le produit
                 </button>
               </form>
@@ -384,19 +383,26 @@ function AdminPage() {
                   className="w-full border border-border bg-background p-3 rounded-lg">
                   {galleryCategories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
-                <input value={galUrl} onChange={(e) => setGalUrl(e.target.value)}
-                  placeholder="URL de l'image (https://...)" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <button type="submit" className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold hover:opacity-90 transition-all">
+                <ImageUpload value={galUrl} onChange={setGalUrl} folder="gallery" />
+                <button type="submit" className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:opacity-90 transition-all">
                   Publier dans la Galerie
                 </button>
               </form>
             ) : activeTab === 'artisanat' ? (
-              <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
-                <input type="text" placeholder="Nom" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <input type="number" placeholder="Prix (HTG)" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <textarea placeholder="Description" className="w-full border border-border bg-background p-3 rounded-lg" rows={3} />
-                <button type="submit" className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold">
-                  Enregistrer (local)
+              <form className="space-y-3" onSubmit={handleAddArtisanat}>
+                <input value={aName} onChange={(e) => setAName(e.target.value)}
+                  placeholder="Nom de l'article" className="w-full border border-border bg-background p-3 rounded-lg" />
+                <input type="number" value={aPrice} onChange={(e) => setAPrice(e.target.value)}
+                  placeholder="Prix (HTG)" className="w-full border border-border bg-background p-3 rounded-lg" />
+                <select value={aCat} onChange={(e) => setACat(e.target.value)}
+                  className="w-full border border-border bg-background p-3 rounded-lg">
+                  {artisanatCategories.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+                <textarea value={aDesc} onChange={(e) => setADesc(e.target.value)}
+                  placeholder="Description" rows={3} className="w-full border border-border bg-background p-3 rounded-lg" />
+                <ImageUpload value={aImg} onChange={setAImg} folder="artisanat" />
+                <button type="submit" className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:opacity-90 transition-all">
+                  Ajouter l'article
                 </button>
               </form>
             ) : activeTab === 'commandes' ? (

@@ -286,8 +286,25 @@ function AdminPage() {
     loadRemote()
   }
 
+  const handleAddArtisanat = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!aName || !aPrice) return toast.error('Nom et prix requis')
+    const { error } = await supabase.from('artisanat' as any).insert({
+      name: aName,
+      price: Number(aPrice),
+      category: aCat,
+      description: aDesc || null,
+      image_url: aImg || null,
+    })
+    if (error) return toast.error('Erreur : ' + error.message)
+    toast.success('Article artisanat ajouté avec succès')
+    setAName(''); setAPrice(''); setADesc(''); setAImg('')
+    loadRemote()
+  }
+
   const formTitle =
     activeTab === 'boutique' ? 'Nouveau Produit'
+    : activeTab === 'artisanat' ? 'Nouvel Article Artisanat'
     : activeTab === 'commandes' ? 'Nouvelle Commande'
     : activeTab === 'clients' ? 'Nouveau Client'
     : activeTab === 'galerie' ? 'Ajouter une image à la Galerie'

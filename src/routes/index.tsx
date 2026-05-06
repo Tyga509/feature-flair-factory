@@ -1,9 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { BouquetCard } from "@/components/BouquetCard";
-import { bouquets } from "@/data/bouquets";
+import type { Bouquet, BouquetCategory } from "@/data/bouquets";
+import { supabase } from "@/integrations/supabase/client";
+import { resolveProductImage } from "@/data/productImages";
 import { Flower, Heart, Truck, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -24,7 +27,30 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   const { t } = useTranslation();
-  const featured = bouquets.slice(0, 3);
+  const [featured, setFeatured] = useState<Bouquet[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const { data } = await supabase
+        .from("products" as any)
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false })
+        .limit(3);
+      if (!mounted) return;
+      setFeatured(((data as any[]) ?? []).map((r) => ({
+        id: r.id,
+        name: r.name,
+        description: r.description ?? "",
+        price: Number(r.price ?? 0),
+        image: resolveProductImage(r.image_url),
+        alt: r.name,
+        category: r.category as BouquetCategory | undefined,
+      })));
+    })();
+    return () => { mounted = false; };
+  }, []);
   const services = [
     { icon: Flower, key: "bouquets" },
     { icon: Heart, key: "events" },

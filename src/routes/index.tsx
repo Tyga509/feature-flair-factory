@@ -27,7 +27,30 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   const { t } = useTranslation();
-  const featured = bouquets.slice(0, 3);
+  const [featured, setFeatured] = useState<Bouquet[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const { data } = await supabase
+        .from("products" as any)
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false })
+        .limit(3);
+      if (!mounted) return;
+      setFeatured(((data as any[]) ?? []).map((r) => ({
+        id: r.id,
+        name: r.name,
+        description: r.description ?? "",
+        price: Number(r.price ?? 0),
+        image: resolveProductImage(r.image_url),
+        alt: r.name,
+        category: r.category as BouquetCategory | undefined,
+      })));
+    })();
+    return () => { mounted = false; };
+  }, []);
   const services = [
     { icon: Flower, key: "bouquets" },
     { icon: Heart, key: "events" },

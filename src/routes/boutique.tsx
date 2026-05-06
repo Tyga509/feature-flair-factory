@@ -17,8 +17,8 @@ export const Route = createFileRoute("/boutique")({
   component: BoutiquePage,
 });
 
-const categories: ("Tous" | BouquetCategory)[] = [
-  "Tous", "Saint-Valentin", "Anniversaire", "Mariage", "Fête des Mères", "Événement", "Pack Célébration",
+const categories: ("Tous" | BouquetCategory | "Artisanat")[] = [
+  "Tous", "Saint-Valentin", "Anniversaire", "Mariage", "Fête des Mères", "Événement", "Pack Célébration", "Artisanat",
 ];
 
 // Smart keyword → category mapping
@@ -31,21 +31,20 @@ const smartMap: { keywords: RegExp; category: BouquetCategory }[] = [
 ];
 
 function BoutiquePage() {
-  const [activeCat, setActiveCat] = useState<"Tous" | BouquetCategory>("Tous");
+  const [activeCat, setActiveCat] = useState<"Tous" | BouquetCategory | "Artisanat">("Tous");
   const [search, setSearch] = useState("");
   const [remoteProducts, setRemoteProducts] = useState<Bouquet[]>([]);
 
-  // Charge dynamiquement les produits depuis Supabase et les fusionne avec les bouquets locaux
+  // Charge dynamiquement produits + artisanat depuis Supabase
   useEffect(() => {
     let mounted = true;
     (async () => {
-      const { data, error } = await supabase
-        .from("products" as any)
-        .select("*")
-        .eq("is_active", true)
-        .order("created_at", { ascending: false });
-      if (error || !mounted || !data) return;
-      const mapped: Bouquet[] = (data as any[]).map((r) => ({
+      const [{ data: products }, { data: artisanat }] = await Promise.all([
+        supabase.from("products" as any).select("*").eq("is_active", true).order("created_at", { ascending: false }),
+        supabase.from("artisanat" as any).select("*").eq("is_active", true).order("created_at", { ascending: false }),
+      ]);
+      if (!mounted) return;
+      const mapProducts: Bouquet[] = ((products as any[]) ?? []).map((r) => ({
         id: r.id,
         name: r.name,
         description: r.description ?? "",
@@ -54,7 +53,16 @@ function BoutiquePage() {
         alt: r.name,
         category: r.category as BouquetCategory | undefined,
       }));
-      setRemoteProducts(mapped);
+      const mapArtisanat: Bouquet[] = ((artisanat as any[]) ?? []).map((r) => ({
+        id: `art-${r.id}`,
+        name: r.name,
+        description: r.description ?? "",
+        price: Number(r.price ?? 0),
+        image: r.image_url ?? "",
+        alt: r.name,
+        category: "Artisanat" as any,
+      }));
+      setRemoteProducts([...mapProducts, ...mapArtisanat]);
     })();
     return () => { mounted = false; };
   }, []);

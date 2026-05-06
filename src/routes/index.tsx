@@ -1,9 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { BouquetCard } from "@/components/BouquetCard";
-import { bouquets } from "@/data/bouquets";
+import type { Bouquet, BouquetCategory } from "@/data/bouquets";
+import { supabase } from "@/integrations/supabase/client";
+import { resolveProductImage } from "@/data/productImages";
 import { Flower, Heart, Truck, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/")({

@@ -53,6 +53,42 @@ export type Database = {
         }
         Relationships: []
       }
+      clients: {
+        Row: {
+          accept_marketing: boolean
+          address: string | null
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          is_banned: boolean
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          accept_marketing?: boolean
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          is_banned?: boolean
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          accept_marketing?: boolean
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          is_banned?: boolean
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contracts: {
         Row: {
           budget: number | null
@@ -92,6 +128,42 @@ export type Database = {
           phone?: string
           status?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      coulisses_videos: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          poster_url: string | null
+          title: string
+          updated_at: string
+          video_url: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          poster_url?: string | null
+          title: string
+          updated_at?: string
+          video_url: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          poster_url?: string | null
+          title?: string
+          updated_at?: string
+          video_url?: string
         }
         Relationships: []
       }
@@ -172,6 +244,74 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      orders: {
+        Row: {
+          address: string | null
+          client_id: string | null
+          created_at: string
+          dedicace: boolean
+          email: string | null
+          full_name: string
+          id: string
+          items: Json
+          livraison: boolean
+          order_number: string
+          payment_method: string | null
+          payment_proof_url: string | null
+          phone: string
+          status: string
+          subtotal: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          client_id?: string | null
+          created_at?: string
+          dedicace?: boolean
+          email?: string | null
+          full_name: string
+          id?: string
+          items?: Json
+          livraison?: boolean
+          order_number: string
+          payment_method?: string | null
+          payment_proof_url?: string | null
+          phone: string
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          client_id?: string | null
+          created_at?: string
+          dedicace?: boolean
+          email?: string | null
+          full_name?: string
+          id?: string
+          items?: Json
+          livraison?: boolean
+          order_number?: string
+          payment_method?: string | null
+          payment_proof_url?: string | null
+          phone?: string
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       products: {
         Row: {

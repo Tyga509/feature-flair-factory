@@ -93,37 +93,52 @@ function AdminPage() {
   }
 
   const loadRemote = useCallback(async () => {
-    const [p, a, g, c, s, ct] = await Promise.all([
+    const [p, a, g, c, s, ct, o, cl, vd] = await Promise.all([
       supabase.from('products' as any).select('*').order('created_at', { ascending: false }),
       supabase.from('artisanat' as any).select('*').order('created_at', { ascending: false }),
       supabase.from('gallery_items').select('*').order('created_at', { ascending: false }),
       supabase.from('custom_requests').select('*').order('created_at', { ascending: false }),
       supabase.from('subscriptions').select('*').order('created_at', { ascending: false }),
       supabase.from('contracts').select('*').order('created_at', { ascending: false }),
+      supabase.from('orders' as any).select('*').order('created_at', { ascending: false }),
+      supabase.from('clients' as any).select('*').order('created_at', { ascending: false }),
+      supabase.from('coulisses_videos' as any).select('*').order('created_at', { ascending: false }),
     ])
     setRemoteData({
       boutique: (p.data ?? []).map((r: any) => ({
-        id: r.id, name: r.name,
+        id: r.id, name: r.name, raw: r,
         details: `${Number(r.price).toLocaleString('fr-FR')} HTG · ${r.category ?? '—'} · Stock ${r.stock ?? 0}`
       })),
       artisanat: ((a.data as any[]) ?? []).map((r: any) => ({
-        id: r.id, name: r.name,
+        id: r.id, name: r.name, raw: r,
         details: `${Number(r.price).toLocaleString('fr-FR')} HTG · ${r.category ?? '—'} · Stock ${r.stock ?? 0}`
       })),
       galerie: (g.data ?? []).map((r: any) => ({
-        id: r.id, name: r.title, details: `${r.category}${r.description ? ' · ' + r.description : ''}`
+        id: r.id, name: r.title, raw: r, details: `${r.category}${r.description ? ' · ' + r.description : ''}`
       })),
       custom_requests: (c.data ?? []).map((r: any) => ({
-        id: r.id, name: r.full_name,
+        id: r.id, name: r.full_name, raw: r,
         details: `${r.bouquet_type} · ${r.support} · ${r.colors} · ${r.phone} · ${r.status}`
       })),
       subscriptions: (s.data ?? []).map((r: any) => ({
-        id: r.id, name: r.full_name,
+        id: r.id, name: r.full_name, raw: r,
         details: `${r.formula?.toUpperCase()} · ${r.phone} · ${r.status}`
       })),
       contracts: (ct.data ?? []).map((r: any) => ({
-        id: r.id, name: r.client_name,
+        id: r.id, name: r.client_name, raw: r,
         details: `${r.event_type}${r.event_date ? ' · ' + r.event_date : ''} · ${r.phone} · ${r.status}`
+      })),
+      commandes: ((o.data as any[]) ?? []).map((r: any) => ({
+        id: r.id, name: r.order_number, raw: r,
+        details: `${r.full_name} · ${Number(r.total).toLocaleString('fr-FR')} HTG · ${r.status}`
+      })),
+      clients: ((cl.data as any[]) ?? []).map((r: any) => ({
+        id: r.id, name: r.full_name, raw: r,
+        details: `${r.phone ?? ''} · ${r.email ?? ''}${r.is_banned ? ' · ⛔ BANNI' : ''}`
+      })),
+      coulisses: ((vd.data as any[]) ?? []).map((r: any) => ({
+        id: r.id, name: r.title, raw: r,
+        details: `${r.category}${r.description ? ' · ' + r.description : ''}`
       })),
     })
   }, [])

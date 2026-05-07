@@ -41,6 +41,7 @@ const productCategories = [
 ]
 
 const artisanatCategories = ['Mug', 'Accessoire', 'Décoration', 'Souvenir', 'Autre']
+const coulissesCategories = ['preparation', 'livraison', 'moments']
 
 function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -51,7 +52,8 @@ function AdminPage() {
 
   const [localData, setLocalData] = useState<Record<string, ItemRow[]>>(initialLocal)
   const [remoteData, setRemoteData] = useState<Record<string, ItemRow[]>>({
-    boutique: [], artisanat: [], galerie: [], custom_requests: [], subscriptions: [], contracts: []
+    boutique: [], artisanat: [], galerie: [], custom_requests: [], subscriptions: [], contracts: [],
+    commandes: [], clients: [], coulisses: [],
   })
 
   const [search, setSearch] = useState<Record<string, string>>({})
@@ -59,24 +61,27 @@ function AdminPage() {
   const [editName, setEditName] = useState('')
   const [editDetails, setEditDetails] = useState('')
 
-  // Form state — galerie
   const [galTitle, setGalTitle] = useState('')
   const [galCat, setGalCat] = useState(galleryCategories[0])
   const [galUrl, setGalUrl] = useState('')
 
-  // Form state — produits
   const [pName, setPName] = useState('')
   const [pPrice, setPPrice] = useState<string>('')
   const [pCat, setPCat] = useState(productCategories[0])
   const [pDesc, setPDesc] = useState('')
   const [pImg, setPImg] = useState('')
 
-  // Form state — artisanat
   const [aName, setAName] = useState('')
   const [aPrice, setAPrice] = useState<string>('')
   const [aCat, setACat] = useState(artisanatCategories[0])
   const [aDesc, setADesc] = useState('')
   const [aImg, setAImg] = useState('')
+
+  // Coulisses form
+  const [vTitle, setVTitle] = useState('')
+  const [vDesc, setVDesc] = useState('')
+  const [vCat, setVCat] = useState(coulissesCategories[0])
+  const [vUrl, setVUrl] = useState('')
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()

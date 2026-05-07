@@ -1,11 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { Minus, Plus, Trash2, ShoppingBag, MapPin, Phone, User, CreditCard, Upload, QrCode, Mail, Check, Gift, Truck, AlertCircle } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, Upload, Check, Gift, Truck, AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/data/bouquets";
 import { ThankYouModal } from "@/components/ThankYouModal";
+import { supabase } from "@/integrations/supabase/client";
+import { buildOrderPdf, fileToDataUrl } from "@/lib/orderPdf";
+import { sendOrderEmail } from "@/server/orders.functions";
 
 export const Route = createFileRoute("/panier")({
   head: () => ({
@@ -56,9 +60,128 @@ function PanierPage() {
 
   const handleCheckout = async () => {
     const num = `SAM-${Date.now().toString().slice(-6)}`;
-    setOrderNumber(num);
-    setOrderTotal(formatPrice(finalTotal));
-    setShowThanks(true);
+    try {
+      // 1. Upload payment proof (if any)
+      let proofUrl: string | undefined;
+      let proofDataUrl: string | undefined;
+      if (customerInfo.paymentProof) {
+        const file = customerInfo.paymentProof;
+        proofDataUrl = await fileToDataUrl(file);
+        const path = `proofs/${num}-${Date.now()}.${file.name.split(".").pop() || "jpg"}`;
+        const { error: upErr } = await supabase.storage.from("flower-storage").upload(path, file, { upsert: false });
+        if (!upErr) {
+          proofUrl = supabase.storage.from("flower-storage").getPublicUrl(path).data.publicUrl;
+        }
+      }
+
+      // 2. Save / upsert client
+      const { data: clientRow } = await supabase
+        .from("clients" as any)
+        .insert({
+          full_name: customerInfo.fullName,
+          email: customerInfo.email || null,
+          phone: customerInfo.phone,
+          address: customerInfo.address || null,
+          accept_marketing: customerInfo.acceptMarketing,
+        })
+        .select("id")
+        .single();
+
+      // 3. Build PDF
+      const itemsArr = items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price }));
+      const { blob: pdfBlob, base64: pdfBase64 } = buildOrderPdf({
+        orderNumber: num,
+        fullName: customerInfo.fullName,
+        email: customerInfo.email,
+        phone: customerInfo.phone,
+        address: customerInfo.address,
+        paymentMethod: customerInfo.paymentMethod,
+        items: itemsArr,
+        subtotal: cartSubtotal,
+        dedicace: customerInfo.wantsDedicace,
+        livraison: customerInfo.wantsLivraison,
+        total: finalTotal,
+        paymentProofDataUrl: proofDataUrl,
+      });
+
+      // 4. Upload PDF
+      const pdfPath = `orders/${num}.pdf`;
+      let pdfUrl: string | undefined;
+      const { error: pdfErr } = await supabase.storage.from("flower-storage").upload(pdfPath, pdfBlob, {
+        contentType: "application/pdf",
+        upsert: true,
+      });
+      if (!pdfErr) {
+        pdfUrl = supabase.storage.from("flower-storage").getPublicUrl(pdfPath).data.publicUrl;
+      }
+
+      // 5. Save order
+      await supabase.from("orders" as any).insert({
+        order_number: num,
+        client_id: (clientRow as any)?.id ?? null,
+        full_name: customerInfo.fullName,
+        email: customerInfo.email || null,
+        phone: customerInfo.phone,
+        address: customerInfo.address || null,
+        payment_method: customerInfo.paymentMethod,
+        payment_proof_url: proofUrl ?? null,
+        items: itemsArr,
+        subtotal: cartSubtotal,
+        dedicace: customerInfo.wantsDedicace,
+        livraison: customerInfo.wantsLivraison,
+        total: finalTotal,
+        status: "en_attente",
+        pdf_url: pdfUrl ?? null,
+      });
+
+      // 6. Send email
+      const html = `
+        <h2 style="color:#4A0404">Nouvelle commande ${num}</h2>
+        <p><b>Client :</b> ${customerInfo.fullName}<br/>
+        <b>Téléphone :</b> ${customerInfo.phone}<br/>
+        <b>Email :</b> ${customerInfo.email || "—"}<br/>
+        <b>Adresse :</b> ${customerInfo.address || "—"}<br/>
+        <b>Paiement :</b> ${customerInfo.paymentMethod}</p>
+        <h3>Articles</h3>
+        <ul>${itemsArr.map((i) => `<li>${i.name} × ${i.quantity} — ${formatPrice(i.price * i.quantity)}</li>`).join("")}</ul>
+        <p><b>Total : ${formatPrice(finalTotal)}</b></p>
+        ${pdfUrl ? `<p><a href="${pdfUrl}">Télécharger la fiche PDF</a></p>` : ""}
+        ${proofUrl ? `<p><a href="${proofUrl}">Voir la preuve de paiement</a></p>` : ""}
+      `;
+      try {
+        const r = await sendOrderEmail({
+          data: {
+            to: "samarabendieunicavictor@gmail.com",
+            subject: `Commande ${num} — ${customerInfo.fullName}`,
+            html,
+            pdfBase64,
+            pdfFilename: `commande-${num}.pdf`,
+            proofBase64: proofDataUrl ? proofDataUrl.split(",")[1] : undefined,
+            proofFilename: proofDataUrl ? `preuve-${num}.${proofDataUrl.includes("png") ? "png" : "jpg"}` : undefined,
+          },
+        });
+        if (!r.ok) {
+          toast.message("Commande enregistrée. Email automatique non configuré — fiche PDF disponible.");
+        } else {
+          toast.success("Commande envoyée par email avec succès");
+        }
+      } catch {
+        toast.message("Commande enregistrée. Envoi email indisponible.");
+      }
+
+      // 7. Local download for the customer
+      const url = URL.createObjectURL(pdfBlob);
+      const a = document.createElement("a");
+      a.href = url; a.download = `commande-${num}.pdf`; a.click();
+      URL.revokeObjectURL(url);
+
+      setOrderNumber(num);
+      setOrderTotal(formatPrice(finalTotal));
+      setShowThanks(true);
+    } catch (e: any) {
+      console.error(e);
+      toast.error("Erreur lors de la validation : " + (e?.message ?? "inconnue"));
+    }
   };
 
   return (

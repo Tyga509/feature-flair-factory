@@ -18,6 +18,7 @@ type ItemRow = {
   id: string
   name: string
   details: string
+  raw?: any
 }
 
 type TabId =
@@ -25,19 +26,8 @@ type TabId =
   | 'galerie' | 'coulisses'
   | 'custom_requests' | 'subscriptions' | 'contracts'
 
-const localOnlyTabs: TabId[] = ['commandes', 'clients', 'coulisses']
-
-const initialLocal: Record<string, ItemRow[]> = {
-  commandes: [
-    { id: 'c1', name: 'SAM-20260424-AB12', details: 'Marie L. · 3500 HTG · En attente' },
-  ],
-  clients: [
-    { id: 'cl1', name: 'Marie Lubin', details: '+509 1234 5678 · Port-au-Prince' },
-  ],
-  coulisses: [
-    { id: 'v1', name: 'Livraison à Pétion-Ville', details: 'Vidéo · Livraisons' },
-  ],
-}
+const localOnlyTabs: TabId[] = []
+const initialLocal: Record<string, ItemRow[]> = {}
 
 const galleryCategories = [
   'Fleurs Artificielles',
@@ -51,6 +41,7 @@ const productCategories = [
 ]
 
 const artisanatCategories = ['Mug', 'Accessoire', 'Décoration', 'Souvenir', 'Autre']
+const coulissesCategories = ['preparation', 'livraison', 'moments']
 
 function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -61,7 +52,8 @@ function AdminPage() {
 
   const [localData, setLocalData] = useState<Record<string, ItemRow[]>>(initialLocal)
   const [remoteData, setRemoteData] = useState<Record<string, ItemRow[]>>({
-    boutique: [], artisanat: [], galerie: [], custom_requests: [], subscriptions: [], contracts: []
+    boutique: [], artisanat: [], galerie: [], custom_requests: [], subscriptions: [], contracts: [],
+    commandes: [], clients: [], coulisses: [],
   })
 
   const [search, setSearch] = useState<Record<string, string>>({})
@@ -69,24 +61,27 @@ function AdminPage() {
   const [editName, setEditName] = useState('')
   const [editDetails, setEditDetails] = useState('')
 
-  // Form state — galerie
   const [galTitle, setGalTitle] = useState('')
   const [galCat, setGalCat] = useState(galleryCategories[0])
   const [galUrl, setGalUrl] = useState('')
 
-  // Form state — produits
   const [pName, setPName] = useState('')
   const [pPrice, setPPrice] = useState<string>('')
   const [pCat, setPCat] = useState(productCategories[0])
   const [pDesc, setPDesc] = useState('')
   const [pImg, setPImg] = useState('')
 
-  // Form state — artisanat
   const [aName, setAName] = useState('')
   const [aPrice, setAPrice] = useState<string>('')
   const [aCat, setACat] = useState(artisanatCategories[0])
   const [aDesc, setADesc] = useState('')
   const [aImg, setAImg] = useState('')
+
+  // Coulisses form
+  const [vTitle, setVTitle] = useState('')
+  const [vDesc, setVDesc] = useState('')
+  const [vCat, setVCat] = useState(coulissesCategories[0])
+  const [vUrl, setVUrl] = useState('')
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
@@ -98,37 +93,52 @@ function AdminPage() {
   }
 
   const loadRemote = useCallback(async () => {
-    const [p, a, g, c, s, ct] = await Promise.all([
+    const [p, a, g, c, s, ct, o, cl, vd] = await Promise.all([
       supabase.from('products' as any).select('*').order('created_at', { ascending: false }),
       supabase.from('artisanat' as any).select('*').order('created_at', { ascending: false }),
       supabase.from('gallery_items').select('*').order('created_at', { ascending: false }),
       supabase.from('custom_requests').select('*').order('created_at', { ascending: false }),
       supabase.from('subscriptions').select('*').order('created_at', { ascending: false }),
       supabase.from('contracts').select('*').order('created_at', { ascending: false }),
+      supabase.from('orders' as any).select('*').order('created_at', { ascending: false }),
+      supabase.from('clients' as any).select('*').order('created_at', { ascending: false }),
+      supabase.from('coulisses_videos' as any).select('*').order('created_at', { ascending: false }),
     ])
     setRemoteData({
       boutique: (p.data ?? []).map((r: any) => ({
-        id: r.id, name: r.name,
+        id: r.id, name: r.name, raw: r,
         details: `${Number(r.price).toLocaleString('fr-FR')} HTG · ${r.category ?? '—'} · Stock ${r.stock ?? 0}`
       })),
       artisanat: ((a.data as any[]) ?? []).map((r: any) => ({
-        id: r.id, name: r.name,
+        id: r.id, name: r.name, raw: r,
         details: `${Number(r.price).toLocaleString('fr-FR')} HTG · ${r.category ?? '—'} · Stock ${r.stock ?? 0}`
       })),
       galerie: (g.data ?? []).map((r: any) => ({
-        id: r.id, name: r.title, details: `${r.category}${r.description ? ' · ' + r.description : ''}`
+        id: r.id, name: r.title, raw: r, details: `${r.category}${r.description ? ' · ' + r.description : ''}`
       })),
       custom_requests: (c.data ?? []).map((r: any) => ({
-        id: r.id, name: r.full_name,
+        id: r.id, name: r.full_name, raw: r,
         details: `${r.bouquet_type} · ${r.support} · ${r.colors} · ${r.phone} · ${r.status}`
       })),
       subscriptions: (s.data ?? []).map((r: any) => ({
-        id: r.id, name: r.full_name,
+        id: r.id, name: r.full_name, raw: r,
         details: `${r.formula?.toUpperCase()} · ${r.phone} · ${r.status}`
       })),
       contracts: (ct.data ?? []).map((r: any) => ({
-        id: r.id, name: r.client_name,
+        id: r.id, name: r.client_name, raw: r,
         details: `${r.event_type}${r.event_date ? ' · ' + r.event_date : ''} · ${r.phone} · ${r.status}`
+      })),
+      commandes: ((o.data as any[]) ?? []).map((r: any) => ({
+        id: r.id, name: r.order_number, raw: r,
+        details: `${r.full_name} · ${Number(r.total).toLocaleString('fr-FR')} HTG · ${r.status}`
+      })),
+      clients: ((cl.data as any[]) ?? []).map((r: any) => ({
+        id: r.id, name: r.full_name, raw: r,
+        details: `${r.phone ?? ''} · ${r.email ?? ''}${r.is_banned ? ' · ⛔ BANNI' : ''}`
+      })),
+      coulisses: ((vd.data as any[]) ?? []).map((r: any) => ({
+        id: r.id, name: r.title, raw: r,
+        details: `${r.category}${r.description ? ' · ' + r.description : ''}`
       })),
     })
   }, [])
@@ -210,20 +220,32 @@ function AdminPage() {
     custom_requests: 'custom_requests',
     subscriptions: 'subscriptions',
     contracts: 'contracts',
+    commandes: 'orders',
+    clients: 'clients',
+    coulisses: 'coulisses_videos',
   }
 
   const handleDelete = async (id: string) => {
     if (!confirm('Supprimer cet élément ?')) return
-    if (isLocal) {
-      setLocalData(prev => ({ ...prev, [activeTab]: prev[activeTab].filter(r => r.id !== id) }))
-      toast.success('Supprimé')
-      return
-    }
     const table = tableMap[activeTab]
     if (!table) return
     const { error } = await supabase.from(table as any).delete().eq('id', id)
     if (error) return toast.error('Erreur : ' + error.message)
-    toast.success('Produit supprimé avec succès')
+    toast.success('Supprimé avec succès')
+    loadRemote()
+  }
+
+  const updateOrderStatus = async (id: string, status: string) => {
+    const { error } = await supabase.from('orders' as any).update({ status }).eq('id', id)
+    if (error) return toast.error('Erreur : ' + error.message)
+    toast.success(`Commande mise à jour : ${status}`)
+    loadRemote()
+  }
+
+  const banClient = async (id: string, banned: boolean) => {
+    const { error } = await supabase.from('clients' as any).update({ is_banned: banned }).eq('id', id)
+    if (error) return toast.error('Erreur : ' + error.message)
+    toast.success(banned ? 'Client banni' : 'Client réactivé')
     loadRemote()
   }
 
@@ -233,21 +255,15 @@ function AdminPage() {
 
   const saveEdit = async () => {
     if (!editingId) return
-    if (isLocal) {
-      setLocalData(prev => ({
-        ...prev,
-        [activeTab]: prev[activeTab].map(r => r.id === editingId ? { ...r, name: editName, details: editDetails } : r)
-      }))
-      setEditingId(null)
-      toast.success('Mis à jour')
-      return
-    }
     const table = tableMap[activeTab]
     if (!table) return
     let updates: any = {}
     if (activeTab === 'boutique') updates = { name: editName, description: editDetails }
     if (activeTab === 'artisanat') updates = { name: editName, description: editDetails }
     if (activeTab === 'galerie') updates = { title: editName, description: editDetails }
+    if (activeTab === 'coulisses') updates = { title: editName, description: editDetails }
+    if (activeTab === 'clients') updates = { full_name: editName, address: editDetails }
+    if (activeTab === 'commandes') updates = { full_name: editName, address: editDetails }
     if (activeTab === 'custom_requests') updates = { full_name: editName, notes: editDetails }
     if (activeTab === 'subscriptions') updates = { full_name: editName, notes: editDetails }
     if (activeTab === 'contracts') updates = { client_name: editName, description: editDetails }
@@ -299,6 +315,18 @@ function AdminPage() {
     if (error) return toast.error('Erreur : ' + error.message)
     toast.success('Article artisanat ajouté avec succès')
     setAName(''); setAPrice(''); setADesc(''); setAImg('')
+    loadRemote()
+  }
+
+  const handleAddCoulisse = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!vTitle || !vUrl) return toast.error('Titre et vidéo requis')
+    const { error } = await supabase.from('coulisses_videos' as any).insert({
+      title: vTitle, description: vDesc || null, category: vCat, video_url: vUrl,
+    })
+    if (error) return toast.error('Erreur : ' + error.message)
+    toast.success('Vidéo publiée avec succès')
+    setVTitle(''); setVDesc(''); setVUrl('')
     loadRemote()
   }
 
@@ -406,37 +434,30 @@ function AdminPage() {
                 </button>
               </form>
             ) : activeTab === 'commandes' ? (
-              <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
-                <input placeholder="Référence commande" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <input type="number" placeholder="Montant (HTG)" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <select className="w-full border border-border bg-background p-3 rounded-lg">
-                  <option>En attente</option><option>En préparation</option><option>Livré</option>
-                </select>
-                <div className="flex items-center gap-2 border border-border bg-background p-3 rounded-lg">
-                  <Calendar size={18} className="text-muted-foreground" />
-                  <input type="date" className="w-full bg-transparent outline-none" />
-                </div>
-                <button type="submit" className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold">Enregistrer</button>
-              </form>
+              <div className="text-sm text-muted-foreground italic p-4 bg-secondary/30 rounded-xl">
+                Les commandes sont créées automatiquement quand un client valide son panier.
+                Utilisez les boutons d'action pour mettre à jour le statut.
+              </div>
             ) : activeTab === 'clients' ? (
-              <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
-                <input placeholder="Nom complet" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <div className="flex items-center gap-2 border border-border bg-background p-3 rounded-lg">
-                  <Phone size={18} className="text-muted-foreground" />
-                  <input type="tel" placeholder="Téléphone" className="w-full bg-transparent outline-none" />
-                </div>
-                <input type="email" placeholder="Email" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <textarea placeholder="Adresse" rows={2} className="w-full border border-border bg-background p-3 rounded-lg" />
-                <button type="submit" className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold">Enregistrer</button>
-              </form>
+              <div className="text-sm text-muted-foreground italic p-4 bg-secondary/30 rounded-xl">
+                Les clients s'enregistrent automatiquement à la validation d'une commande.
+                Utilisez le bouton "Bannir" pour bloquer un compte.
+              </div>
             ) : activeTab === 'coulisses' ? (
-              <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
-                <input placeholder="Titre vidéo" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <select className="w-full border border-border bg-background p-3 rounded-lg">
-                  <option>Préparation</option><option>Livraisons</option><option>Moments</option>
+              <form className="space-y-3" onSubmit={handleAddCoulisse}>
+                <input value={vTitle} onChange={(e) => setVTitle(e.target.value)}
+                  placeholder="Titre vidéo" className="w-full border border-border bg-background p-3 rounded-lg" />
+                <textarea value={vDesc} onChange={(e) => setVDesc(e.target.value)}
+                  placeholder="Description" rows={2} className="w-full border border-border bg-background p-3 rounded-lg" />
+                <select value={vCat} onChange={(e) => setVCat(e.target.value)}
+                  className="w-full border border-border bg-background p-3 rounded-lg">
+                  {coulissesCategories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
-                <input type="file" accept="video/*" className="w-full text-sm text-muted-foreground" />
-                <button type="submit" className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold">Publier</button>
+                <ImageUpload value={vUrl} onChange={setVUrl} folder="coulisses" />
+                <p className="text-[11px] text-muted-foreground">Astuce : uploadez ici votre fichier vidéo (mp4, webm). L'URL publique sera automatiquement enregistrée.</p>
+                <button type="submit" className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:opacity-90 transition-all">
+                  Publier la vidéo
+                </button>
               </form>
             ) : (
               <div className="text-sm text-muted-foreground italic p-4 bg-secondary/30 rounded-xl">
@@ -478,6 +499,20 @@ function AdminPage() {
                         <td className="px-3 py-3 text-foreground font-medium">{row.name}</td>
                         <td className="px-3 py-3 text-muted-foreground text-sm">{row.details}</td>
                         <td className="px-3 py-3 text-right whitespace-nowrap">
+                          {activeTab === 'commandes' && (
+                            <span className="inline-flex gap-1 mr-2">
+                              <button onClick={() => updateOrderStatus(row.id, 'pret')} className="text-xs px-2 py-1 rounded-md bg-accent/20 text-accent font-semibold hover:bg-accent/30">Prête</button>
+                              <button onClick={() => updateOrderStatus(row.id, 'livre')} className="text-xs px-2 py-1 rounded-md bg-primary/15 text-primary font-semibold hover:bg-primary/25">Livrée</button>
+                              <button onClick={() => updateOrderStatus(row.id, 'annule')} className="text-xs px-2 py-1 rounded-md bg-destructive/15 text-destructive font-semibold hover:bg-destructive/25">Annuler</button>
+                              {row.raw?.pdf_url && <a href={row.raw.pdf_url} target="_blank" rel="noreferrer" className="text-xs px-2 py-1 rounded-md bg-secondary text-foreground font-semibold hover:bg-secondary/70">PDF</a>}
+                            </span>
+                          )}
+                          {activeTab === 'clients' && (
+                            <button onClick={() => banClient(row.id, !row.raw?.is_banned)}
+                              className={`text-xs px-3 py-1 rounded-md font-semibold mr-2 ${row.raw?.is_banned ? 'bg-accent/20 text-accent' : 'bg-destructive/15 text-destructive hover:bg-destructive/25'}`}>
+                              {row.raw?.is_banned ? 'Réactiver' : 'Bannir'}
+                            </button>
+                          )}
                           <button onClick={() => startEdit(row)} className="text-primary hover:bg-primary/10 p-2 rounded-lg" aria-label="Modifier"><Edit size={16} /></button>
                           <button onClick={() => handleDelete(row.id)} className="text-destructive hover:bg-destructive/10 p-2 rounded-lg ml-1" aria-label="Supprimer"><Trash2 size={16} /></button>
                         </td>

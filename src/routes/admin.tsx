@@ -434,37 +434,30 @@ function AdminPage() {
                 </button>
               </form>
             ) : activeTab === 'commandes' ? (
-              <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
-                <input placeholder="Référence commande" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <input type="number" placeholder="Montant (HTG)" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <select className="w-full border border-border bg-background p-3 rounded-lg">
-                  <option>En attente</option><option>En préparation</option><option>Livré</option>
-                </select>
-                <div className="flex items-center gap-2 border border-border bg-background p-3 rounded-lg">
-                  <Calendar size={18} className="text-muted-foreground" />
-                  <input type="date" className="w-full bg-transparent outline-none" />
-                </div>
-                <button type="submit" className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold">Enregistrer</button>
-              </form>
+              <div className="text-sm text-muted-foreground italic p-4 bg-secondary/30 rounded-xl">
+                Les commandes sont créées automatiquement quand un client valide son panier.
+                Utilisez les boutons d'action pour mettre à jour le statut.
+              </div>
             ) : activeTab === 'clients' ? (
-              <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
-                <input placeholder="Nom complet" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <div className="flex items-center gap-2 border border-border bg-background p-3 rounded-lg">
-                  <Phone size={18} className="text-muted-foreground" />
-                  <input type="tel" placeholder="Téléphone" className="w-full bg-transparent outline-none" />
-                </div>
-                <input type="email" placeholder="Email" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <textarea placeholder="Adresse" rows={2} className="w-full border border-border bg-background p-3 rounded-lg" />
-                <button type="submit" className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold">Enregistrer</button>
-              </form>
+              <div className="text-sm text-muted-foreground italic p-4 bg-secondary/30 rounded-xl">
+                Les clients s'enregistrent automatiquement à la validation d'une commande.
+                Utilisez le bouton "Bannir" pour bloquer un compte.
+              </div>
             ) : activeTab === 'coulisses' ? (
-              <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
-                <input placeholder="Titre vidéo" className="w-full border border-border bg-background p-3 rounded-lg" />
-                <select className="w-full border border-border bg-background p-3 rounded-lg">
-                  <option>Préparation</option><option>Livraisons</option><option>Moments</option>
+              <form className="space-y-3" onSubmit={handleAddCoulisse}>
+                <input value={vTitle} onChange={(e) => setVTitle(e.target.value)}
+                  placeholder="Titre vidéo" className="w-full border border-border bg-background p-3 rounded-lg" />
+                <textarea value={vDesc} onChange={(e) => setVDesc(e.target.value)}
+                  placeholder="Description" rows={2} className="w-full border border-border bg-background p-3 rounded-lg" />
+                <select value={vCat} onChange={(e) => setVCat(e.target.value)}
+                  className="w-full border border-border bg-background p-3 rounded-lg">
+                  {coulissesCategories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
-                <input type="file" accept="video/*" className="w-full text-sm text-muted-foreground" />
-                <button type="submit" className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-bold">Publier</button>
+                <ImageUpload value={vUrl} onChange={setVUrl} folder="coulisses" />
+                <p className="text-[11px] text-muted-foreground">Astuce : uploadez ici votre fichier vidéo (mp4, webm). L'URL publique sera automatiquement enregistrée.</p>
+                <button type="submit" className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:opacity-90 transition-all">
+                  Publier la vidéo
+                </button>
               </form>
             ) : (
               <div className="text-sm text-muted-foreground italic p-4 bg-secondary/30 rounded-xl">

@@ -1,11 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { Minus, Plus, Trash2, ShoppingBag, MapPin, Phone, User, CreditCard, Upload, QrCode, Mail, Check, Gift, Truck, AlertCircle } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, Upload, Check, Gift, Truck, AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/data/bouquets";
 import { ThankYouModal } from "@/components/ThankYouModal";
+import { supabase } from "@/integrations/supabase/client";
+import { buildOrderPdf, fileToDataUrl } from "@/lib/orderPdf";
+import { sendOrderEmail } from "@/server/orders.functions";
 
 export const Route = createFileRoute("/panier")({
   head: () => ({

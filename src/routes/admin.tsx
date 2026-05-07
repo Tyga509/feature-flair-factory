@@ -318,6 +318,18 @@ function AdminPage() {
     loadRemote()
   }
 
+  const handleAddCoulisse = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!vTitle || !vUrl) return toast.error('Titre et vidéo requis')
+    const { error } = await supabase.from('coulisses_videos' as any).insert({
+      title: vTitle, description: vDesc || null, category: vCat, video_url: vUrl,
+    })
+    if (error) return toast.error('Erreur : ' + error.message)
+    toast.success('Vidéo publiée avec succès')
+    setVTitle(''); setVDesc(''); setVUrl('')
+    loadRemote()
+  }
+
   const formTitle =
     activeTab === 'boutique' ? 'Nouveau Produit'
     : activeTab === 'artisanat' ? 'Nouvel Article Artisanat'

@@ -220,20 +220,32 @@ function AdminPage() {
     custom_requests: 'custom_requests',
     subscriptions: 'subscriptions',
     contracts: 'contracts',
+    commandes: 'orders',
+    clients: 'clients',
+    coulisses: 'coulisses_videos',
   }
 
   const handleDelete = async (id: string) => {
     if (!confirm('Supprimer cet élément ?')) return
-    if (isLocal) {
-      setLocalData(prev => ({ ...prev, [activeTab]: prev[activeTab].filter(r => r.id !== id) }))
-      toast.success('Supprimé')
-      return
-    }
     const table = tableMap[activeTab]
     if (!table) return
     const { error } = await supabase.from(table as any).delete().eq('id', id)
     if (error) return toast.error('Erreur : ' + error.message)
-    toast.success('Produit supprimé avec succès')
+    toast.success('Supprimé avec succès')
+    loadRemote()
+  }
+
+  const updateOrderStatus = async (id: string, status: string) => {
+    const { error } = await supabase.from('orders' as any).update({ status }).eq('id', id)
+    if (error) return toast.error('Erreur : ' + error.message)
+    toast.success(`Commande mise à jour : ${status}`)
+    loadRemote()
+  }
+
+  const banClient = async (id: string, banned: boolean) => {
+    const { error } = await supabase.from('clients' as any).update({ is_banned: banned }).eq('id', id)
+    if (error) return toast.error('Erreur : ' + error.message)
+    toast.success(banned ? 'Client banni' : 'Client réactivé')
     loadRemote()
   }
 
@@ -243,21 +255,15 @@ function AdminPage() {
 
   const saveEdit = async () => {
     if (!editingId) return
-    if (isLocal) {
-      setLocalData(prev => ({
-        ...prev,
-        [activeTab]: prev[activeTab].map(r => r.id === editingId ? { ...r, name: editName, details: editDetails } : r)
-      }))
-      setEditingId(null)
-      toast.success('Mis à jour')
-      return
-    }
     const table = tableMap[activeTab]
     if (!table) return
     let updates: any = {}
     if (activeTab === 'boutique') updates = { name: editName, description: editDetails }
     if (activeTab === 'artisanat') updates = { name: editName, description: editDetails }
     if (activeTab === 'galerie') updates = { title: editName, description: editDetails }
+    if (activeTab === 'coulisses') updates = { title: editName, description: editDetails }
+    if (activeTab === 'clients') updates = { full_name: editName, address: editDetails }
+    if (activeTab === 'commandes') updates = { full_name: editName, address: editDetails }
     if (activeTab === 'custom_requests') updates = { full_name: editName, notes: editDetails }
     if (activeTab === 'subscriptions') updates = { full_name: editName, notes: editDetails }
     if (activeTab === 'contracts') updates = { client_name: editName, description: editDetails }

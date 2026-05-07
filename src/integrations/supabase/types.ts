@@ -259,6 +259,7 @@ export type Database = {
           order_number: string
           payment_method: string | null
           payment_proof_url: string | null
+          pdf_url: string | null
           phone: string
           status: string
           subtotal: number
@@ -278,6 +279,7 @@ export type Database = {
           order_number: string
           payment_method?: string | null
           payment_proof_url?: string | null
+          pdf_url?: string | null
           phone: string
           status?: string
           subtotal?: number
@@ -297,6 +299,7 @@ export type Database = {
           order_number?: string
           payment_method?: string | null
           payment_proof_url?: string | null
+          pdf_url?: string | null
           phone?: string
           status?: string
           subtotal?: number

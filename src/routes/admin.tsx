@@ -18,6 +18,7 @@ type ItemRow = {
   id: string
   name: string
   details: string
+  raw?: any
 }
 
 type TabId =
@@ -25,19 +26,8 @@ type TabId =
   | 'galerie' | 'coulisses'
   | 'custom_requests' | 'subscriptions' | 'contracts'
 
-const localOnlyTabs: TabId[] = ['commandes', 'clients', 'coulisses']
-
-const initialLocal: Record<string, ItemRow[]> = {
-  commandes: [
-    { id: 'c1', name: 'SAM-20260424-AB12', details: 'Marie L. · 3500 HTG · En attente' },
-  ],
-  clients: [
-    { id: 'cl1', name: 'Marie Lubin', details: '+509 1234 5678 · Port-au-Prince' },
-  ],
-  coulisses: [
-    { id: 'v1', name: 'Livraison à Pétion-Ville', details: 'Vidéo · Livraisons' },
-  ],
-}
+const localOnlyTabs: TabId[] = []
+const initialLocal: Record<string, ItemRow[]> = {}
 
 const galleryCategories = [
   'Fleurs Artificielles',

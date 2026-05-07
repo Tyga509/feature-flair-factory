@@ -499,6 +499,20 @@ function AdminPage() {
                         <td className="px-3 py-3 text-foreground font-medium">{row.name}</td>
                         <td className="px-3 py-3 text-muted-foreground text-sm">{row.details}</td>
                         <td className="px-3 py-3 text-right whitespace-nowrap">
+                          {activeTab === 'commandes' && (
+                            <span className="inline-flex gap-1 mr-2">
+                              <button onClick={() => updateOrderStatus(row.id, 'pret')} className="text-xs px-2 py-1 rounded-md bg-accent/20 text-accent font-semibold hover:bg-accent/30">Prête</button>
+                              <button onClick={() => updateOrderStatus(row.id, 'livre')} className="text-xs px-2 py-1 rounded-md bg-primary/15 text-primary font-semibold hover:bg-primary/25">Livrée</button>
+                              <button onClick={() => updateOrderStatus(row.id, 'annule')} className="text-xs px-2 py-1 rounded-md bg-destructive/15 text-destructive font-semibold hover:bg-destructive/25">Annuler</button>
+                              {row.raw?.pdf_url && <a href={row.raw.pdf_url} target="_blank" rel="noreferrer" className="text-xs px-2 py-1 rounded-md bg-secondary text-foreground font-semibold hover:bg-secondary/70">PDF</a>}
+                            </span>
+                          )}
+                          {activeTab === 'clients' && (
+                            <button onClick={() => banClient(row.id, !row.raw?.is_banned)}
+                              className={`text-xs px-3 py-1 rounded-md font-semibold mr-2 ${row.raw?.is_banned ? 'bg-accent/20 text-accent' : 'bg-destructive/15 text-destructive hover:bg-destructive/25'}`}>
+                              {row.raw?.is_banned ? 'Réactiver' : 'Bannir'}
+                            </button>
+                          )}
                           <button onClick={() => startEdit(row)} className="text-primary hover:bg-primary/10 p-2 rounded-lg" aria-label="Modifier"><Edit size={16} /></button>
                           <button onClick={() => handleDelete(row.id)} className="text-destructive hover:bg-destructive/10 p-2 rounded-lg ml-1" aria-label="Supprimer"><Trash2 size={16} /></button>
                         </td>

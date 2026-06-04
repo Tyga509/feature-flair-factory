@@ -56,7 +56,7 @@ export function BouquetCard({ bouquet }: { bouquet: Bouquet }) {
           <span className="font-display text-lg text-primary font-semibold">
             {formatPrice(bouquet.price)}
           </span>
-          <Button onClick={handleAdd} size="sm" className="gap-1.5 rounded-full">
+          <Button onClick={handleAdd} size="sm" className="gap-1.5 rounded-full text-white hover:text-white">
             <ShoppingBag className="h-4 w-4" />
             {t("common.add")}
           </Button>

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Search, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { askSamayooBot } from "@/server/chatbot.functions";
+import { askSamayooBot } from "@/lib/chatbot.functions";
 
 interface Msg {
   role: "user" | "bot";

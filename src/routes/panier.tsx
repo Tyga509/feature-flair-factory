@@ -9,7 +9,7 @@ import { formatPrice } from "@/data/bouquets";
 import { ThankYouModal } from "@/components/ThankYouModal";
 import { supabase } from "@/integrations/supabase/client";
 import { buildOrderPdf, fileToDataUrl } from "@/lib/orderPdf";
-import { sendOrderEmail } from "@/server/orders.functions";
+import { sendOrderEmail } from "@/lib/orders.functions";
 
 export const Route = createFileRoute("/panier")({
   head: () => ({

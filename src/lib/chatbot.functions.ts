@@ -24,12 +24,7 @@ interface ChatInput {
  * ============================================================
  */
 
-const SEARCH_API_KEY = process.env.SEARCH_API_KEY ?? "";
-const SEARCH_PROVIDER = (process.env.SEARCH_PROVIDER ?? "duckduckgo") as
-  | "duckduckgo"
-  | "serpapi"
-  | "brave"
-  | "google";
+type SearchProvider = "duckduckgo" | "serpapi" | "brave" | "google";
 
 // ---------- TARIFS & SERVICES (source de vérité concierge) ----------
 const PRICING = {
@@ -124,8 +119,8 @@ async function searchDuckDuckGo(q: string) {
   return { text, citations };
 }
 
-async function searchSerpAPI(q: string) {
-  const url = `https://serpapi.com/search.json?q=${encodeURIComponent(q)}&api_key=${SEARCH_API_KEY}`;
+async function searchSerpAPI(q: string, apiKey: string) {
+  const url = `https://serpapi.com/search.json?q=${encodeURIComponent(q)}&api_key=${apiKey}`;
   const r = await fetch(url);
   const j: any = await r.json();
   const top = j.organic_results?.[0];
@@ -135,9 +130,9 @@ async function searchSerpAPI(q: string) {
   };
 }
 
-async function searchBrave(q: string) {
+async function searchBrave(q: string, apiKey: string) {
   const r = await fetch(`https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(q)}`, {
-    headers: { "X-Subscription-Token": SEARCH_API_KEY, Accept: "application/json" },
+    headers: { "X-Subscription-Token": apiKey, Accept: "application/json" },
   });
   const j: any = await r.json();
   const top = j.web?.results?.[0];
@@ -147,9 +142,9 @@ async function searchBrave(q: string) {
   };
 }
 
-async function performSearch(q: string) {
-  if (SEARCH_API_KEY && SEARCH_PROVIDER === "serpapi") return searchSerpAPI(q);
-  if (SEARCH_API_KEY && SEARCH_PROVIDER === "brave") return searchBrave(q);
+async function performSearch(q: string, apiKey: string, provider: SearchProvider) {
+  if (apiKey && provider === "serpapi") return searchSerpAPI(q, apiKey);
+  if (apiKey && provider === "brave") return searchBrave(q, apiKey);
   return searchDuckDuckGo(q);
 }
 
@@ -162,6 +157,8 @@ export const askSamayooBot = createServerFn({ method: "POST" })
     return { message: d.message.trim(), lang };
   })
   .handler(async ({ data }) => {
+    const searchApiKey = process.env.SEARCH_API_KEY ?? "";
+    const searchProvider = (process.env.SEARCH_PROVIDER ?? "duckduckgo") as SearchProvider;
     const { message, lang } = data;
     const lower = message.toLowerCase();
 
@@ -179,7 +176,7 @@ export const askSamayooBot = createServerFn({ method: "POST" })
 
     // 2) Recherche web (saisons, entretien, variétés…)
     try {
-      const { text, citations } = await performSearch(`${message} fleurs`);
+      const { text, citations } = await performSearch(`${message} fleurs`, searchApiKey, searchProvider);
       const answer = text
         ? `${SEARCH_LABEL[lang]} 🔍 :\n\n${text}`
         : FALLBACK[lang];
